@@ -1,0 +1,46 @@
+/* src/App.css */
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+}
+
+.app-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align items at the top of the container */
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+h1 {
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+  width: 100%;
+}
+
+.main-content {
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.bus-layout-container {
+  flex: 1;
+  margin-right: 20px; /* Space between the two components */
+}
+
+.ticket-verifier-container {
+  width: 300px; /* Adjust the width as needed */
+}
+
+.ticket-verifier-container,
+.bus-layout-container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
