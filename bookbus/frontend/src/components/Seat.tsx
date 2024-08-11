@@ -4,12 +4,14 @@ import React from 'react';
 import { Seat as SeatType } from '../types/types';
 import { UserOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd';
+import './Seat.css'; // Import CSS file
 
 interface SeatProps {
   seat: SeatType;
+  onClick: (seatNumber: number) => void;
 }
 
-const Seat: React.FC<SeatProps> = ({ seat }) => {
+const Seat: React.FC<SeatProps> = ({ seat, onClick }) => {
   const backgroundColor = seat.isVerified
     ? 'green'
     : seat.isOccupied
@@ -19,18 +21,9 @@ const Seat: React.FC<SeatProps> = ({ seat }) => {
   return (
     <Tooltip title={`Seat ${seat.number}`} placement="top">
       <div
-        style={{
-          width: '40px',
-          height: '40px',
-          backgroundColor,
-          margin: '5px',
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          borderRadius: '5px',
-          boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)',
-          cursor: 'pointer',
-        }}
+        className="seat"
+        style={{ backgroundColor }}
+        onClick={() => onClick(seat.number)} // Handle click event
       >
         <UserOutlined style={{ color: 'white', fontSize: '24px' }} />
       </div>

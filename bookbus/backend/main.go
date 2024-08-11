@@ -17,6 +17,7 @@ func main() {
     r.HandleFunc("/api/tickets", handlers.GetTickets).Methods("GET")
     r.HandleFunc("/api/tickets/verify", handlers.VerifyTicket).Methods("POST")
     r.HandleFunc("/api/seats", handlers.GetSeats).Methods("GET")
+    r.HandleFunc("/api/seats/{number:[0-9]+}", handlers.GetSeatDetails).Methods("GET") // เพิ่ม endpoint ใหม่
 
     // CORS middleware
     r.Use(func(next http.Handler) http.Handler {

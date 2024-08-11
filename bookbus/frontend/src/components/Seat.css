@@ -1,0 +1,20 @@
+/* src/components/Seat.css */
+
+.seat {
+    width: 40px;
+    height: 40px;
+    margin: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .seat:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  
