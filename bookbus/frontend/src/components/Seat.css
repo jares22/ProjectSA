@@ -1,20 +1,27 @@
-/* src/components/Seat.css */
-
+/* Seat.css */
 .seat {
-    width: 40px;
-    height: 40px;
-    margin: 5px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    user-select: none;
-    transition: background-color 0.3s ease;
-  }
-  
-  .seat:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-  }
-  
+  width: 30px;
+  height: 30px;
+  border: 1px solid #6E683B; /* ขอบสีน้ำตาลเขียว */
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.seat.available {
+  background-color: #D7C3A5; /* สีพื้นหลังของที่นั่งว่างเป็นเบจอ่อน */
+  color: #3C312B; /* สีตัวอักษรน้ำตาลเข้ม */
+}
+
+.seat.occupied {
+  background-color: #F7B22C; /* สีพื้นหลังของที่นั่งที่ถูกจองเป็นสีเหลืองทอง */
+  color: white; /* สีตัวอักษรเป็นสีขาว */
+}
+
+.seat.verified {
+  background-color: #6E683B; /* สีพื้นหลังของที่นั่งที่ยืนยันเป็นน้ำตาลเขียว */
+  color: white; /* สีตัวอักษรเป็นสีขาว */
+}

@@ -1,0 +1,138 @@
+-- Insert data into members table
+INSERT INTO members (username, password, email, first_name, last_name, birthday) VALUES
+('Member01', 'Encrypt(123456)', 'demo@gmail.com', 'SA', '67', '2000-12-19'),
+('Member02', 'Encrypt(123456)', 'demo01@gmail.com', 'SE', '67', '2000-12-19'),
+('Member03', 'Encrypt(123456)', 'demo02@gmail.com', 'John', 'Doe', '1995-05-21'),
+('Member04', 'Encrypt(123456)', 'demo03@gmail.com', 'Jane', 'Doe', '1989-11-15'),
+('Member05', 'Encrypt(123456)', 'demo04@gmail.com', 'Alice', 'Smith', '1990-07-30'),
+('Member06', 'Encrypt(123456)', 'demo05@gmail.com', 'Bob', 'Johnson', '1992-03-14'),
+('Member07', 'Encrypt(123456)', 'demo06@gmail.com', 'Charlie', 'Brown', '1993-01-22'),
+('Member08', 'Encrypt(123456)', 'demo07@gmail.com', 'Diana', 'Prince', '1991-09-05'),
+('Member09', 'Encrypt(123456)', 'demo08@gmail.com', 'Bruce', 'Wayne', '1988-10-25'),
+('Member10', 'Encrypt(123456)', 'demo09@gmail.com', 'Clark', 'Kent', '1987-06-18');
+
+-- Insert data into buses table
+INSERT INTO buses (bus_number, bus_type) VALUES
+('B001', 'VIP'),
+('B002', 'Standard'),
+('B003', 'Luxury'),
+('B004', 'Economy'),
+('B005', 'Deluxe'),
+('B006', 'Standard'),
+('B007', 'VIP'),
+('B008', 'Luxury'),
+('B009', 'Economy'),
+('B010', 'Deluxe');
+
+-- Insert data into routes table
+INSERT INTO routes (start_location, end_location, distance) VALUES
+('Bangkok', 'Chiang Mai', 700),
+('Bangkok', 'Phuket', 850),
+('Chiang Mai', 'Krabi', 500),
+('Chiang Rai', 'Bangkok', 800),
+('Phuket', 'Krabi', 200),
+('Krabi', 'Bangkok', 650),
+('Bangkok', 'Hua Hin', 200),
+('Hua Hin', 'Chiang Mai', 700),
+('Chiang Mai', 'Phuket', 750),
+('Phuket', 'Chiang Rai', 900);
+
+-- Insert data into schedules table
+INSERT INTO schedules (route_id, bus_id, departure_time, arrival_time) VALUES
+(1, 1, '2024-07-01 08:00:00', '2024-07-01 16:00:00'),
+(2, 2, '2024-07-02 10:00:00', '2024-07-02 19:00:00'),
+(3, 3, '2024-07-03 09:00:00', '2024-07-03 17:00:00'),
+(4, 4, '2024-07-04 07:00:00', '2024-07-04 15:00:00'),
+(5, 5, '2024-07-05 06:00:00', '2024-07-05 14:00:00'),
+(6, 6, '2024-07-06 11:00:00', '2024-07-06 19:00:00'),
+(7, 7, '2024-07-07 10:00:00', '2024-07-07 18:00:00'),
+(8, 8, '2024-07-08 12:00:00', '2024-07-08 20:00:00'),
+(9, 9, '2024-07-09 13:00:00', '2024-07-09 21:00:00'),
+(10, 10, '2024-07-10 14:00:00', '2024-07-10 22:00:00');
+
+-- Insert data into seats table
+INSERT INTO seats (bus_id, seat_number) VALUES
+(5001, 'A1'),
+(5001, 'A2'),
+(5001, 'A3'),
+(5001, 'A4'),
+(5001, 'B1'),
+(5001, 'B2'),
+(5001, 'B3'),
+(5001, 'B4'),
+(5002, 'A1'),
+(5002, 'A2'),
+(5002, 'A3'),
+(5002, 'A4'),
+(5002, 'B1'),
+(5002, 'B2'),
+(5002, 'B3'),
+(5002, 'B4'),
+(5003, 'A1'),
+(5003, 'A2'),
+(5003, 'A3'),
+(5003, 'A4'),
+(5003, 'B1'),
+(5003, 'B2'),
+(5003, 'B3'),
+(5003, 'B4'),
+(5004, 'A1'),
+(5004, 'A2'),
+(5004, 'A3'),
+(5004, 'A4'),
+(5004, 'B1'),
+(5004, 'B2'),
+(5004, 'B3'),
+(5004, 'B4');
+
+-- Insert data into tickets table
+INSERT INTO tickets (member_id, seat_id, schedule_id, issue_date, status) VALUES
+(1001, 3001, 4001, '2024-07-01', 'Active'),
+(1002, 3002, 4002, '2024-07-02', 'Canceled'),
+(1003, 3003, 4003, '2024-07-03', 'Active'),
+(1004, 3004, 4004, '2024-07-04', 'Active'),
+(1005, 3005, 4005, '2024-07-05', 'Inactive'),
+(1006, 3006, 4006, '2024-07-06', 'Active'),
+(1007, 3007, 4007, '2024-07-07', 'Inactive'),
+(1008, 3008, 4008, '2024-07-08', 'Active'),
+(1009, 3009, 4009, '2024-07-09', 'Canceled'),
+(1010, 3010, 4010, '2024-07-10', 'Active');
+
+-- Insert data into employees table
+INSERT INTO employees (username, password, first_name, last_name) VALUES
+('emp01', 'Encrypt(123456)', 'John', 'Doe'),
+('emp02', 'Encrypt(123456)', 'Jane', 'Smith'),
+('emp03', 'Encrypt(123456)', 'Michael', 'Johnson'),
+('emp04', 'Encrypt(123456)', 'Emily', 'Davis'),
+('emp05', 'Encrypt(123456)', 'David', 'Wilson'),
+('emp06', 'Encrypt(123456)', 'Sarah', 'Brown'),
+('emp07', 'Encrypt(123456)', 'Chris', 'Taylor'),
+('emp08', 'Encrypt(123456)', 'Jessica', 'Anderson'),
+('emp09', 'Encrypt(123456)', 'Daniel', 'Thomas'),
+('emp10', 'Encrypt(123456)', 'Laura', 'Jackson');
+
+-- Insert data into ticket_verifications table
+INSERT INTO ticket_verifications (ticket_id, employee_id, verification_time, status) VALUES
+(2001, 7001, '2024-07-01 07:30:00', 'Verified'),
+(2002, 7002, '2024-07-02 09:45:00', 'Verified'),
+(2003, 7003, '2024-07-03 11:00:00', 'Verified'),
+(2004, 7004, '2024-07-04 08:15:00', 'Verified'),
+(2005, 7005, '2024-07-05 10:30:00', 'Verified'),
+(2006, 7006, '2024-07-06 12:00:00', 'Verified'),
+(2007, 7007, '2024-07-07 14:30:00', 'Verified'),
+(2008, 7008, '2024-07-08 16:45:00', 'Verified'),
+(2009, 7009, '2024-07-09 18:00:00', 'Verified'),
+(2010, 7010, '2024-07-10 20:15:00', 'Verified');
+
+-- Insert data into passengers table
+INSERT INTO passengers (member_id, ticket_id) VALUES
+(1001, 2001),
+(1002, 2002),
+(1003, 2003),
+(1004, 2004),
+(1005, 2005),
+(1006, 2006),
+(1007, 2007),
+(1008, 2008),
+(1009, 2009),
+(1010, 2010);

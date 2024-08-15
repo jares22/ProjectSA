@@ -1,46 +1,105 @@
-/* src/App.css */
-
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-}
-
 .app-container {
   display: flex;
-  justify-content: center;
-  align-items: flex-start; /* Align items at the top of the container */
   min-height: 100vh;
-  padding: 20px;
-  box-sizing: border-box;
+  background-color: #f5f5f5;
 }
 
-h1 {
-  margin-bottom: 20px;
-  color: #333;
-  text-align: center;
-  width: 100%;
+.sidebar {
+  width: 250px;
+  background-color: #3C312B;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  transition: width 0.3s;
 }
+
+.sidebar.closed {
+  width: 50px;
+}
+
+.nav-toggle {
+  background-color: #6E683B;
+  color: #D7C3A5;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.nav-toggle:hover {
+  background-color: #F0A500;
+}
+
+.nav-links {
+  flex: 1;
+}
+
+.nav-links a {
+  color: #D7C3A5;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 15px;
+  transition: color 0.3s;
+  white-space: nowrap; /* Prevent text wrap */
+  overflow: hidden; /* Hide overflow text */
+  text-overflow: ellipsis; /* Show ellipsis when text is too long */
+  opacity: 1;
+  transition: opacity 0.3s, max-width 0.3s;
+}
+
+.sidebar.closed .nav-links a {
+  opacity: 0;
+  max-width: 0; /* Collapse the text completely */
+}
+
+.nav-links a:hover {
+  color: #F7B22C;
+}
+
+.logout-button {
+  font-size: 1rem;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #6E683B;
+  color: #D7C3A5;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.logout-button:hover {
+  background-color: #F0A500;
+  transform: scale(1.05);
+}
+
+.sidebar.closed .logout-button {
+  display: none;
+}
+
 
 .main-content {
-  display: flex;
-  width: 100%;
-  max-width: 1200px;
-}
-
-.bus-layout-container {
   flex: 1;
-  margin-right: 20px; /* Space between the two components */
-}
-
-.ticket-verifier-container {
-  width: 300px; /* Adjust the width as needed */
-}
-
-.ticket-verifier-container,
-.bus-layout-container {
-  background-color: #fff;
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: margin-left 0.3s;
+}
+
+.main-content.shifted {
+  margin-left: 200px;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+.content-wrapper {
+  display: flex;
+  gap: 20px;
+}
+
+.bus-layout-container,
+.ticket-verifier-container {
+  flex: 1;
 }

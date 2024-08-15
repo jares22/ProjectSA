@@ -1,42 +1,44 @@
 /* src/components/TicketVerifier.css */
 
 .ticket-verifier-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  h2 {
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  input {
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    width: 100%;
-    max-width: 300px;
-    margin-bottom: 10px;
-  }
-  
-  button {
-    padding: 10px 20px;
-    font-size: 16px;
-    color: #fff;
-    background-color: #4CAF50;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  button:hover {
-    background-color: #45a049;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #F0E3B0; /* สีพื้นหลังของกล่องเป็นสีเหลืองอ่อน */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: #3C312B; /* สีตัวอักษรของหัวเรื่องเป็นน้ำตาลเข้ม */
+}
+
+input {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #6E683B; /* ขอบของช่องกรอกข้อมูลเป็นสีน้ำตาลเขียว */
+  border-radius: 4px;
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 10px;
+  background-color: #D7C3A5; /* สีพื้นหลังของช่องกรอกข้อมูลเป็นเบจอ่อน */
+  color: #3C312B; /* สีตัวอักษรของช่องกรอกข้อมูลเป็นน้ำตาลเข้ม */
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff; /* สีตัวอักษรปุ่มเป็นสีขาว */
+  background-color: #6E683B; /* สีพื้นหลังปุ่มเป็นน้ำตาลเขียว */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #F0A500; /* สีพื้นหลังปุ่มเมื่อ hover เป็นสีส้มเข้มขึ้น */
+  transform: scale(1.05); /* ขยายขนาดปุ่มเล็กน้อยเมื่อ hover */
+}

@@ -1,21 +1,21 @@
 /* src/components/BusLayout.css */
 
 .bus-layout-container {
-    flex: 1;
-  }
-  
-  .bus-layout-content {
-    padding: 15px; /* Consistent padding */
-    border-radius: 8px;
-    background-color: #fff; /* Ensure background color is consistent */
-  }
-  
-  .ant-row {
-    margin-bottom: 15px; /* Reduced margin for rows */
-  }
-  
-  .ant-col {
-    display: flex;
-    justify-content: center;
-  }
-  
+  flex: 1;
+}
+
+.bus-layout-content {
+  padding: 15px; /* Consistent padding */
+  border-radius: 8px;
+  background-color: #D7C3A5; /* พื้นหลังสีเบจอ่อน */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* เพิ่มเงาเบา */
+}
+
+.ant-row {
+  margin-bottom: 15px; /* Reduced margin for rows */
+}
+
+.ant-col {
+  display: flex;
+  justify-content: center;
+}

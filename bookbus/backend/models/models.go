@@ -7,7 +7,16 @@ type Ticket struct {
 }
 
 type Seat struct {
-    Number     int  `json:"number"`
-    IsOccupied bool `json:"isOccupied"`
-    IsVerified bool `json:"isVerified"`
+    Number      int  `json:"number"`
+    IsOccupied  bool `json:"isOccupied"`
+    IsVerified  bool `json:"isVerified"`
+}
+
+type VerifyTicketRequest struct {
+    TicketID   string `json:"ticketId"`
+    EmployeeID string `json:"employeeId"`
+}
+
+type VerificationResult struct {
+    Message string `json:"message"`
 }

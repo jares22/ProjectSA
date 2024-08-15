@@ -1,0 +1,92 @@
+/* ConfirmationPage.module.css */
+
+.confirmationContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #F0E3B0; /* สีพื้นหลังเหลืองอ่อน */
+    padding: 20px;
+  }
+  
+  .confirmationTitle {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #3C312B; /* สีตัวอักษรน้ำตาลเข้ม */
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 350px; /* ความกว้างสูงสุดของฟอร์ม */
+    background-color: #FFFFFF; /* พื้นหลังฟอร์มสีขาว */
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* เงาเบา */
+  }
+  
+  .codeInput {
+    font-size: 1.5rem;
+    padding: 12px;
+    margin-bottom: 20px;
+    width: 100%;
+    text-align: center;
+    border: 2px solid #6E683B; /* ขอบสีน้ำตาลเขียว */
+    border-radius: 5px;
+    background-color: #F0E3B0; /* พื้นหลังของอินพุตสีเหลืองอ่อน */
+    color: #3C312B; /* สีตัวอักษรของอินพุตน้ำตาลเข้ม */
+  }
+  
+  .roundSelection {
+    margin-bottom: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .roundLabel {
+    font-size: 1rem;
+    color: #3C312B; /* สีตัวอักษรน้ำตาลเข้ม */
+    margin-bottom: 10px;
+  }
+  
+  .roundSelect {
+    font-size: 1rem;
+    padding: 10px;
+    border: 2px solid #6E683B; /* ขอบสีน้ำตาลเขียว */
+    border-radius: 5px;
+    background-color: #F0E3B0; /* พื้นหลังของ select สีเหลืองอ่อน */
+    color: #3C312B; /* สีตัวอักษรของ select น้ำตาลเข้ม */
+    width: 100%;
+    max-width: 200px; /* ความกว้างสูงสุดของ select */
+  }
+  
+  .submitButton {
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #3C312B; /* สีพื้นหลังปุ่มน้ำตาลเข้ม */
+    color: #FFFFFF; /* สีตัวอักษรปุ่มสีขาว */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  .submitButton:hover {
+    background-color: #6E683B; /* สีพื้นหลังปุ่มเมื่อ hover เป็นสีน้ำตาลเขียว */
+    transform: scale(1.05); /* ขยายปุ่มเล็กน้อย */
+  }
+  
+  .errorMessage {
+    color: #E74C3C; /* สีข้อความแสดงข้อผิดพลาดเป็นสีแดงอ่อน */
+    margin-top: 10px;
+    font-size: 1rem;
+    text-align: center;
+  }
+  

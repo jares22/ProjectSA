@@ -1,6 +1,5 @@
-// src/App.tsx
-
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import BusLayout from './components/BusLayout';
 import TicketVerifier from './components/TicketVerifier';
 import { Ticket, Seat } from './types/types';
@@ -21,6 +20,8 @@ const initialSeats: Seat[] = Array.from({ length: 50 }, (_, i) => ({
 const App: React.FC = () => {
   const [seats, setSeats] = useState<Seat[]>(initialSeats);
   const [tickets, setTickets] = useState<Ticket[]>(initialTickets);
+  const [navOpen, setNavOpen] = useState(true);
+  const navigate = useNavigate();
 
   const handleVerify = (ticketId: string) => {
     const ticketIndex = tickets.findIndex((t) => t.id === ticketId);
@@ -38,11 +39,34 @@ const App: React.FC = () => {
     }
   };
 
+  const toggleNav = () => {
+    setNavOpen(!navOpen);
+  };
+
+  const handleLogout = () => {
+    navigate('/');
+  };
+
   return (
     <div className="app-container">
-      <div>
-        <h1>Bus Ticket Verification System</h1>
-        <div className="main-content">
+      <div className={`sidebar ${navOpen ? 'open' : 'closed'}`}>
+        <button className="nav-toggle" onClick={toggleNav}>
+          {navOpen ? '<<' : '>>'}
+        </button>
+        <nav className="nav-links">
+          <a href="/app">Home</a>
+          <a href="/confirmation">Confirmation</a>
+          <a href="/schedule">Schedule</a>
+        </nav>
+        <button className="logout-button" onClick={handleLogout}>
+          Log Out
+        </button>
+      </div>
+      <div className={`main-content ${navOpen ? 'shifted' : ''}`}>
+        <header className="header">
+          <h1>Bus Ticket Verification System</h1>
+        </header>
+        <div className="content-wrapper">
           <div className="bus-layout-container">
             <BusLayout seats={seats} />
           </div>
