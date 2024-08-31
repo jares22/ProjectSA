@@ -1,10 +1,53 @@
-import React, { useState } from "react";
-import { Space, Button, Col, Row, Divider, Form, Input, Card, message } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import { VerifyTicket } from "../services/https";
+import React, { useState,useEffect } from "react";
+import { Space, Button, Col, Row, Divider, Form, Input, Card, message , Table} from "antd";
+import { VerifyTicket, GetgetVerifiers } from "../services/https";
 import { TicketVerification } from "../interfaces/ticketVerification";
+import type { ColumnsType } from "antd/es/table";
+import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 const Verifier: React.FC = () => {
+  const columns: ColumnsType<TicketVerification> = [
+    {
+        title: "ticketNumber",
+        dataIndex: "TicketNumber", 
+
+      },
+    {
+      title: "seatStatus",
+      dataIndex: "SeatStatus",   /* ใน Database ชื่อมันเป็นยังไงตอนรับต้องอิงตามนั้น*/
+      key: "5555",
+    },        
+
+    
+    {
+      title: "จัดการ",
+      dataIndex: "Manage",
+      key: "manage",
+      render: (text, record, index) => (
+        <>
+          <Button
+            shape="circle"
+            icon={<EditOutlined />}
+            size={"large"}   //ปุ่มแก้ไข
+          />
+          <Button
+            style={{ marginLeft: 10 }}
+            shape="circle"
+            icon={<DeleteOutlined />}  //ปุ่มลบ
+            size={"large"}
+            danger
+          />
+        </>
+      ),
+    },
+  ];
+
+
+
+
+
+
+  const [Verifier, setVerifier] = useState<TicketVerification[]>([]);
   const [messageApi, contextHolder] = message.useMessage();
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
@@ -41,43 +84,70 @@ const Verifier: React.FC = () => {
     form.resetFields();
   };
 
-  return (
-    <div>
-      {contextHolder}
-      <Card style={{ width: "100%", maxWidth: "800px", margin: "auto", backgroundColor: "#F7B22C" }}>
-        <h1>ตรวจสอบตั๋ว</h1>
-        <Divider />
-        <Form form={form} name="verification" layout="vertical" onFinish={handleVerification} autoComplete="off">
-          <Row gutter={[16, 16]}>
-            <Col span={24}>
-              <Form.Item
-                label="หมายเลขตั๋ว"
-                name="ticketNumber"
-                rules={[
-                  { required: true, message: "กรุณากรอกหมายเลขตั๋ว!" },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row justify="end">
-            <Col>
-              <Space>
-                <Button htmlType="button" style={{ marginRight: "10px" }} onClick={handleCancel}>
-                  ยกเลิก
-                </Button>
-                <Button type="primary" htmlType="submit" icon={<PlusOutlined />} loading={loading}>
-                  ตรวจสอบ
-                </Button>
-              </Space>
-            </Col>
-          </Row>
-        </Form>
-      </Card>
 
-      
-    </div>
+  const getVerifiers = async () => {
+    let res = await GetgetVerifiers();
+    console.log(res);
+     if (res) {
+      setVerifier(res);
+     }
+     };
+
+    useEffect(() => {   //ทำครั้งแรกที่มาหน้านี้ มานี้แล้วจะทำฟังก์ชั่นี้ทันที   1
+        getVerifiers();
+    }, []);
+
+
+
+  return (
+    <div style={{ padding: '20px', backgroundColor: '#F7F7F7' }}>
+    {contextHolder}
+    <Row gutter={16}>
+      <Col span={12}>
+        <Card style={{ width: "100%", backgroundColor: "#F7B22C", borderRadius: '8px' }}>
+          <h1 style={{ textAlign: 'center' }}>ตรวจสอบตั๋ว</h1>
+          <Divider />
+          <Form form={form} name="verification" layout="vertical" onFinish={handleVerification} autoComplete="off">
+            <Row gutter={[16, 16]}>
+              <Col span={24}>
+                <Form.Item
+                  label="หมายเลขตั๋ว"
+                  name="ticketNumber"
+                  rules={[{ required: true, message: "กรุณากรอกหมายเลขตั๋ว!" }]}
+                >
+                  <Input placeholder="กรอกหมายเลขตั๋วที่นี่" />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row justify="end">
+              <Col>
+                <Space>
+                  <Button htmlType="button" style={{ marginRight: "10px" }} onClick={handleCancel}>
+                    ยกเลิก
+                  </Button>
+                  <Button type="primary" htmlType="submit" icon={<PlusOutlined />} loading={loading}>
+                    ตรวจสอบ
+                  </Button>
+                </Space>
+              </Col>
+            </Row>
+          </Form>
+        </Card>
+      </Col>
+      <Col span={12}>
+        <Card style={{ width: "100%", backgroundColor: '#FFF', borderRadius: '8px' }}>
+          <h2 style={{ textAlign: 'center' }}>รายการตั๋ว</h2>
+          <Table
+            rowKey="ticketNumber"
+            columns={columns}
+            dataSource={Verifier}
+            pagination={false}
+            style={{ backgroundColor: '#FFF' }}
+          />
+        </Card>
+      </Col>
+    </Row>
+  </div>
   );
 };
 

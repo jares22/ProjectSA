@@ -25,6 +25,7 @@ func main() {
 	router := r.Group("")
 	{
 		router.POST("/verify-ticket", controller.VerifyTicket)
+		router.GET("/ticket", controller.GetTicket)
 	}
 
 	r.GET("/", func(c *gin.Context) {

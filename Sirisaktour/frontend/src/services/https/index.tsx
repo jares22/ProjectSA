@@ -30,3 +30,24 @@ export async function VerifyTicket(data: { ticketNumber: string }): Promise<Tick
     throw new Error((error as Error).message || "เกิดข้อผิดพลาดในการเชื่อมต่อ!");
   }
 }
+
+
+export async function GetgetVerifiers() {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  let res = await fetch(`${apiUrl}/ticket`, requestOptions) //ตอนBackend ส้งข้อมูลมา res เป็นตัวรับ (await เป็นตัวรอการตอบกลับจาก Backend) 
+    .then((res) => {
+      if (res.status == 200) {//HTTP Status Code 200 หมายความว่าคำขอ (request) ที่ส่งไปยังเซิร์ฟเวอร์ได้รับการดำเนินการสำเร็จ
+        return res.json();
+      } else {
+        return false;
+      }
+    });
+
+  return res;
+}
