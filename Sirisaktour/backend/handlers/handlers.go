@@ -3,8 +3,8 @@ package handlers
 import (
     "encoding/json"
     "net/http"
-    "backend/database"
-    "backend/models"
+    "bookbus-backend/database"
+    "bookbus-backend/models"
     "github.com/gorilla/mux"
 )
 

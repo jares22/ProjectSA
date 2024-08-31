@@ -1,38 +1,52 @@
+// main.go
 package main
 
 import (
-    "log"
-    "net/http"
+	"net/http"
 
-    "backend/database"
-    "backend/handlers"
-
-    "github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
+	"bookbus-backend/config"
+	"bookbus-backend/controller"
 )
 
+const PORT = "8000"
+
 func main() {
-    database.InitDB()
+	// Open connection to the database
+	config.ConnectionDB()
+	config.SetupDatabase()
 
-    r := mux.NewRouter()
-    r.HandleFunc("/api/tickets", handlers.GetTickets).Methods("GET")
-    r.HandleFunc("/api/tickets/verify", handlers.VerifyTicket).Methods("POST")
-    r.HandleFunc("/api/seats", handlers.GetSeats).Methods("GET")
-    r.HandleFunc("/api/seats/{number:[0-9]+}", handlers.GetSeatDetails).Methods("GET") // เพิ่ม endpoint ใหม่
+	r := gin.Default()
 
-    // CORS middleware
-    r.Use(func(next http.Handler) http.Handler {
-        return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-            w.Header().Set("Access-Control-Allow-Origin", "*")
-            w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-            w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-            if r.Method == "OPTIONS" {
-                w.WriteHeader(http.StatusOK)
-                return
-            }
-            next.ServeHTTP(w, r)
-        })
-    })
+	// Use CORS middleware
+	r.Use(CORSMiddleware())
 
-    log.Println("Server is running on http://localhost:8080")
-    log.Fatal(http.ListenAndServe(":8080", r))
+	// Define routes
+	router := r.Group("")
+	{
+		router.POST("/verify-ticket", controller.VerifyTicket)
+	}
+
+	r.GET("/", func(c *gin.Context) {
+		c.String(http.StatusOK, "API RUNNING... PORT: %s", PORT)
+	})
+
+	// Run the server
+	r.Run(":" + PORT)
+}
+
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE, PATCH")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+	}
 }

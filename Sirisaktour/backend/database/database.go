@@ -3,7 +3,7 @@ package database
 import (
     "database/sql"
     _ "github.com/mattn/go-sqlite3" // Import SQLite driver
-    "backend/models"
+    "bookbus-backend/models"
 )
 
 var db *sql.DB
