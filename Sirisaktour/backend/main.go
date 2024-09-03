@@ -26,6 +26,7 @@ func main() {
 	{
 		router.POST("/verify-ticket", controller.VerifyTicket)
 		router.GET("/ticket", controller.GetTicket)
+		router.PUT("/update-seat-status", controller.UpdateSeatStatus)
 	}
 
 	r.GET("/", func(c *gin.Context) {

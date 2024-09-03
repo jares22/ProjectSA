@@ -1,5 +1,6 @@
 // interfaces/ticketVerification.ts
 export interface TicketVerification {
+  [x: string]: string;
   ticketNumber: string;
 }
 

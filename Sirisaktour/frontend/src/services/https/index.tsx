@@ -10,6 +10,12 @@ export interface TicketVerificationResponse {
   message?: string;
 }
 
+export interface UpdateSeatStatusRequest {
+  ticketNumber: string;
+  seatStatus: string;
+}
+
+
 export async function VerifyTicket(data: { ticketNumber: string }): Promise<TicketVerificationResponse> {
   const requestOptions = {
     method: "POST",
@@ -50,4 +56,22 @@ export async function GetgetVerifiers() {
     });
 
   return res;
+}
+
+export async function UpdateSeatStatus(data: UpdateSeatStatusRequest): Promise<void> {
+  const requestOptions = {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  };
+
+  try {
+    const response = await fetch(`${apiUrl}/update-seat-status`, requestOptions);
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText || "Failed to update seat status");
+    }
+  } catch (error) {
+    throw new Error((error as Error).message || "Connection error!");
+  }
 }

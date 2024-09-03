@@ -14,12 +14,19 @@ type TicketRequest struct {
 }
 
 type TicketResponse struct {
-	IsValid      bool   `json:"isValid"` // Updated to match frontend expectations
+	IsValid      bool   `json:"isValid"`
 	TicketNumber string `json:"ticketNumber,omitempty"`
 	SeatStatus   string `json:"seatStatus,omitempty"`
 	Message      string `json:"message,omitempty"`
 }
 
+// UpdateSeatStatusRequest represents the request body for updating seat status
+type UpdateSeatStatusRequest struct {
+	TicketNumber string `json:"ticketNumber" binding:"required"`
+	SeatStatus   string `json:"seatStatus" binding:"required"`
+}
+
+// VerifyTicket checks if the ticket is valid
 func VerifyTicket(c *gin.Context) {
 	var req TicketRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -45,17 +52,44 @@ func VerifyTicket(c *gin.Context) {
 	})
 }
 
+// GetTicket retrieves all tickets from the database
 func GetTicket(c *gin.Context) {
-	var ticket []entity.Ticket
+	var tickets []entity.Ticket
 
 	db := config.DB()
-	results := db.Find(&ticket)  /*// Get all records    result := db.Find(&users)
-															// SELECT * FROM users;*/
+	results := db.Find(&tickets)
 	if results.Error != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": results.Error.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, ticket)   //ถ้าการดึงข้อมูลสำเร็จ ฟังก์ชันจะส่ง HTTP 200 (OK) 
-	//ทำเป็นไฟล์ JSON								//พร้อมกับ JSON ที่ประกอบด้วยรายการผู้ใช้ที่ถูกเก็บใน users.
+	c.JSON(http.StatusOK, tickets)
 }
 
+// UpdateSeatStatus updates the seat status in the database
+func UpdateSeatStatus(c *gin.Context) {
+	var req UpdateSeatStatusRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request format"})
+		return
+	}
+
+	var ticket entity.Ticket
+	result := config.DB().Where("ticket_number = ?", req.TicketNumber).First(&ticket)
+	if result.Error != nil {
+		if result.Error == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Ticket not found"})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+		return
+	}
+
+	// Update the seat status
+	ticket.SeatStatus = req.SeatStatus
+	if saveErr := config.DB().Save(&ticket).Error; saveErr != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update seat status"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Seat status updated successfully", "ticketNumber": ticket.TicketNumber, "seatStatus": ticket.SeatStatus})
+}
