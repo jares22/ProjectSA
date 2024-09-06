@@ -1,19 +1,9 @@
 // services/https/index.ts
+import { TicketVerificationResponse,UpdateSeatStatusRequest } from "../../interfaces/ticketVerification";
 
 const apiUrl = "http://localhost:8000";
 
-export interface TicketVerificationResponse {
-  success: any;
-  isValid: boolean;
-  ticketNumber?: string;
-  seatStatus?: string;
-  message?: string;
-}
 
-export interface UpdateSeatStatusRequest {
-  ticketNumber: string;
-  seatStatus: string;
-}
 
 
 export async function VerifyTicket(data: { ticketNumber: string }): Promise<TicketVerificationResponse> {
@@ -38,7 +28,7 @@ export async function VerifyTicket(data: { ticketNumber: string }): Promise<Tick
 }
 
 
-export async function GetgetVerifiers() {
+export async function GetVerifiers() {
   const requestOptions = {
     method: "GET",
     headers: {

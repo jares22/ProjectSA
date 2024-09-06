@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Space, Button, Col, Row, Divider, Form, Input, Card, message, Table } from "antd";
-import { VerifyTicket, GetgetVerifiers, UpdateSeatStatus } from "../services/https";
+import { VerifyTicket, GetVerifiers, UpdateSeatStatus } from "../services/https";
 import { TicketVerification } from "../interfaces/ticketVerification";
 import type { ColumnsType } from "antd/es/table";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
@@ -92,7 +92,7 @@ const Verifier: React.FC = () => {
   
 
   const getVerifiers = async () => {
-    let res = await GetgetVerifiers();
+    let res = await GetVerifiers();
     console.log(res);
     if (res) {
       setVerifier(res);

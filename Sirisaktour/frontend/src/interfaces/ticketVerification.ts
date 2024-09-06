@@ -11,3 +11,7 @@ export interface TicketVerificationResponse {
   seatStatus?: string;
   message?: string;
 }
+export interface UpdateSeatStatusRequest {
+  ticketNumber: string;
+  seatStatus: string;
+}
