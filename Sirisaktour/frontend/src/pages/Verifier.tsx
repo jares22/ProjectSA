@@ -4,6 +4,7 @@ import { VerifyTicket, GetVerifiers, UpdateSeatStatus } from "../services/https"
 import { TicketVerification } from "../interfaces/ticketVerification";
 import type { ColumnsType } from "antd/es/table";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import Layout from "antd/es/layout/layout";
 
 const Verifier: React.FC = () => {
   const columns: ColumnsType<TicketVerification> = [
@@ -29,7 +30,6 @@ const Verifier: React.FC = () => {
       ),
     },
   ];
-  
 
   const [Verifier, setVerifier] = useState<TicketVerification[]>([]);
   const [messageApi, contextHolder] = message.useMessage();
@@ -42,25 +42,23 @@ const Verifier: React.FC = () => {
       const result = await VerifyTicket({ ticketNumber: values.ticketNumber });
       setLoading(false);
       console.log("ผลลัพธ์จาก API:", result);
-  
+
       if (result.isValid) {
         try {
-          // Log the result before calling UpdateSeatStatus
           console.log("ผลลัพธ์จาก API:", result);
-  
+
           await UpdateSeatStatus({
             ticketNumber: result.ticketNumber!,
             seatStatus: "ตรวจสอบแล้ว", // Example status: "Checked"
           });
-  
+
           messageApi.open({
             type: "success",
             content: `การตรวจสอบสำเร็จ! หมายเลขตั๋ว: ${result.ticketNumber}, สถานะที่นั่ง: ${result.seatStatus}`,
           });
-  
+
           form.resetFields();
         } catch (updateError) {
-          // Cast updateError to Error type to access its message property
           const errorMessage = (updateError as Error).message || "อัพเดตสถานะที่นั่งไม่สำเร็จ!";
           messageApi.open({
             type: "error",
@@ -82,14 +80,10 @@ const Verifier: React.FC = () => {
       });
     }
   };
-  
-  
 
   const handleCancel = () => {
     form.resetFields();
   };
-
-  
 
   const getVerifiers = async () => {
     let res = await GetVerifiers();
@@ -103,8 +97,6 @@ const Verifier: React.FC = () => {
     getVerifiers();
   }, []);
 
-  
-
   return (
     <div style={{ padding: '20px', backgroundColor: '#F7F7F7' }}>
       {contextHolder}
@@ -113,7 +105,13 @@ const Verifier: React.FC = () => {
           <Card style={{ width: "100%", backgroundColor: "#F7B22C", borderRadius: '8px' }}>
             <h1 style={{ textAlign: 'center' }}>ตรวจสอบตั๋ว</h1>
             <Divider />
-            <Form form={form} name="verification" layout="vertical" onFinish={handleVerification} autoComplete="off">
+            <Form
+              form={form}
+              name="verification"
+              layout="vertical"
+              onFinish={handleVerification}
+              autoComplete="off"
+            >
               <Row gutter={[16, 16]}>
                 <Col span={24}>
                   <Form.Item
@@ -131,7 +129,12 @@ const Verifier: React.FC = () => {
                     <Button htmlType="button" style={{ marginRight: "10px" }} onClick={handleCancel}>
                       ยกเลิก
                     </Button>
-                    <Button type="primary" htmlType="submit" icon={<PlusOutlined />} loading={loading}>
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      icon={<PlusOutlined />}
+                      loading={loading}
+                    >
                       ตรวจสอบ
                     </Button>
                   </Space>
@@ -153,6 +156,9 @@ const Verifier: React.FC = () => {
           </Card>
         </Col>
       </Row>
+      <Layout>
+        {/* Removed SeatMap component */}
+      </Layout>
     </div>
   );
 };

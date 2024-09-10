@@ -1,0 +1,18 @@
+/* Basic styling for the seat container */
+.seat {
+    width: 40px; /* Adjust width as needed */
+    height: 40px; /* Adjust height as needed */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px; /* Rounded corners */
+    margin: 5px; /* Space between seats */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth color transition */
+  }
+  
+  /* Optional: add some hover effects for better UX */
+  .seat:hover {
+    opacity: 0.8; /* Slightly reduce opacity on hover */
+  }
+  

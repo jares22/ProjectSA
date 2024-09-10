@@ -4,9 +4,10 @@ package main
 import (
 	"net/http"
 
-	"github.com/gin-gonic/gin"
 	"bookbus-backend/config"
 	"bookbus-backend/controller"
+
+	"github.com/gin-gonic/gin"
 )
 
 const PORT = "8000"
@@ -27,6 +28,7 @@ func main() {
 		router.POST("/verify-ticket", controller.VerifyTicket)
 		router.GET("/ticket", controller.GetTicket)
 		router.PUT("/update-seat-status", controller.UpdateSeatStatus)
+		router.GET("/getseatdetails", controller.GetSeatDetails)
 	}
 
 	r.GET("/", func(c *gin.Context) {
