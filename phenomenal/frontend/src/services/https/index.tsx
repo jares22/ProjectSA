@@ -1,5 +1,5 @@
 // services/https/index.ts
-import { TicketVerification, TicketVerificationResponse, UpdateSeatStatusRequest } from "../../interfaces/ticketVerification";
+import { TicketVerification, TicketVerificationResponse, UpdateSeatStatusRequest } from "../../interfaces/TicketVerification";
 import { BusRound } from "../../interfaces/busrounds";
 
 const apiUrl = "http://localhost:8000";
@@ -14,6 +14,7 @@ export async function VerifyTicket(data: { ticketNumber: string }): Promise<Tick
 
   try {
     const response = await fetch(`${apiUrl}/verify-ticket`, requestOptions);
+    console.log("VerifyTicket->", response);
     if (response.ok) {
       const result: TicketVerificationResponse = await response.json();
       return result;
@@ -27,13 +28,14 @@ export async function VerifyTicket(data: { ticketNumber: string }): Promise<Tick
 }
 
 // Get Verifiers Function
-export async function GetVerifiers() {
+export async function GetVerifiers(): Promise<TicketVerification[]> {
   const requestOptions = {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   };
 
   const res = await fetch(`${apiUrl}/ticket`, requestOptions).then((res) => {
+    console.log("GetVerifiers->", res);
     if (res.status === 200) {
       return res.json();
     } else {
@@ -54,6 +56,7 @@ export async function UpdateSeatStatus(data: UpdateSeatStatusRequest): Promise<v
 
   try {
     const response = await fetch(`${apiUrl}/update-seat-status`, requestOptions);
+    console.log("UpdateSeatStatus->", response);
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(errorText || "Failed to update seat status");
@@ -72,7 +75,7 @@ export async function fetchBusRounds(): Promise<BusRound[]> {
 
   try {
     const response = await fetch(`${apiUrl}/bus-rounds`, requestOptions);
-    console.log(response); // Log response for debugging
+    console.log("fetchBusRounds->", response);
     if (response.ok) {
       const data: BusRound[] = await response.json();
       return data;

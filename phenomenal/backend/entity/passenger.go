@@ -18,4 +18,5 @@ type Passenger struct {
 	Member Member `gorm:"foreignKey:MemberID"`
 
 	Payment []Payment `gorm:"foreignKey:PassengerID"` 
+	TicketVerification []TicketVerification `gorm:"foreignKey:TicketID"` 
 }

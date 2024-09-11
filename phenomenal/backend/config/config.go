@@ -3,7 +3,7 @@ package config
 import (
 	"fmt"
 
-	"bookbus-backend/entity" // Ensure this path is correct and matches your project structure
+	"sirisaktour/entity" // Ensure this path is correct and matches your project structure
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )

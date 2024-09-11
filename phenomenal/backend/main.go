@@ -4,8 +4,10 @@ package main
 import (
 	"net/http"
 
-	"bookbus-backend/config"
-	"bookbus-backend/controller"
+	"sirisaktour/config"
+	"sirisaktour/controller"
+
+	//"sirisaktour/controller"
 
 	"github.com/gin-gonic/gin"
 )
@@ -30,7 +32,7 @@ func main() {
 		router.PUT("/update-seat-status", controller.UpdateSeatStatus)
 		// router.GET("/getseatdetails", controller.GetSeatDetails)
 		r.GET("/bus-rounds", controller.GetBusRounds)
-		r.GET("/verifiers", controller.GetVerifiers)
+		//r.GET("/verifiers", controller.GetVerifiers)
 	}
 
 	r.GET("/", func(c *gin.Context) {

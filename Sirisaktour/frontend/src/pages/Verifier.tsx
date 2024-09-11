@@ -1,55 +1,59 @@
 import React, { useState, useEffect } from "react";
-import { Space, Button, Col, Row, Divider, Form, Input, Card, message, Table } from "antd";
-import { VerifyTicket, GetVerifiers, UpdateSeatStatus } from "../services/https";
+import { Space, Button, Col, Row, Divider, Form, Input, Card, message, Table, Select } from "antd";
+import { VerifyTicket, GetVerifiers, UpdateSeatStatus, fetchBusRounds } from "../services/https";
 import { TicketVerification } from "../interfaces/ticketVerification";
 import type { ColumnsType } from "antd/es/table";
-import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import Layout from "antd/es/layout/layout";
+import { PlusOutlined } from "@ant-design/icons";
+import { BusRound } from "../interfaces/busrounds";
+import Item from "antd/es/list/Item";
+const { Option } = Select;
 
 const Verifier: React.FC = () => {
   const columns: ColumnsType<TicketVerification> = [
     {
       title: "Ticket Number",
-      dataIndex: "TicketNumber",
-      key: "ticketNumber", // Unique key for the column
+      dataIndex: "ticket_number",
+      key: "ticketNumber",
     },
     {
       title: "Seat Status",
-      dataIndex: "SeatStatus",
-      key: "seatStatus", // Unique key for the column
+      dataIndex: "seat_status",
+      key: "seatStatus",
     },
     {
-      title: "จัดการ",
-      dataIndex: "Manage",
-      key: "manage", // Unique key for the column
-      render: (_text, _record, index) => (
-        <>
-          <Button key={`edit-${index}`} shape="circle" icon={<EditOutlined />} size={"large"} />
-          <Button key={`delete-${index}`} style={{ marginLeft: 10 }} shape="circle" icon={<DeleteOutlined />} size={"large"} danger />
-        </>
-      ),
+      title: "Phone Number",
+      dataIndex: "phone_number",
+      key: "phoneNumber",
+    },
+    {
+      title: "Bus ID",
+      dataIndex: "bus_id",
+      key: "busID",
+    },
+    {
+      title: "Bus Round",
+      dataIndex: "bus_route",
+      key: "busRoute",
     },
   ];
 
-  const [Verifier, setVerifier] = useState<TicketVerification[]>([]);
+  const [verifier, setVerifier] = useState<TicketVerification[]>([]);
   const [messageApi, contextHolder] = message.useMessage();
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
+  const [busRounds, setBusRounds] = useState<BusRound[] & { [key: string]: any }>([]);
+  const [selectedRound, setSelectedRound] = useState<string | undefined>();
 
   const handleVerification = async (values: TicketVerification) => {
     setLoading(true);
     try {
       const result = await VerifyTicket({ ticketNumber: values.ticketNumber });
       setLoading(false);
-      console.log("ผลลัพธ์จาก API:", result);
-
       if (result.isValid) {
         try {
-          console.log("ผลลัพธ์จาก API:", result);
-
           await UpdateSeatStatus({
             ticketNumber: result.ticketNumber!,
-            seatStatus: "ตรวจสอบแล้ว", // Example status: "Checked"
+            seatStatus: "ตรวจสอบแล้ว",
           });
 
           messageApi.open({
@@ -86,79 +90,181 @@ const Verifier: React.FC = () => {
   };
 
   const getVerifiers = async () => {
-    let res = await GetVerifiers();
-    console.log(res);
-    if (res) {
-      setVerifier(res);
+    try {
+      const res = await GetVerifiers();
+      if (res) {
+        setVerifier(res);
+      }
+    } catch (error) {
+      console.error("Error fetching verifiers:", error);
     }
+  };
+
+  const getBusRounds = async () => {
+   let res = await fetchBusRounds();
+   console.log("getBusRounds: ", res);
+   setBusRounds(res);
+  };
+
+  const FindBusTimeTickets = (values: any) => {
+    console.log("Before FindBusTimeTickets: ", values);
+
+    // แยกวันและเวลาออกจากสตริง
+    const allData = values.findBusTimeTicket.split('---');
+
+    // จัดเก็บค่าในตัวแปร day และ time
+    const day = allData[0].trim();
+    const time = allData[1].trim();
+
+    console.log("Day:", day);
+    console.log("Time:", time);
+};
+
+  
+  
+
+
+  const handleRoundChange = (value: string) => {
+    setSelectedRound(value);
+    // Additional actions can be handled here if needed after selecting a bus round
   };
 
   useEffect(() => {
     getVerifiers();
+    getBusRounds();
   }, []);
 
   return (
-    <div style={{ padding: '20px', backgroundColor: '#F7F7F7' }}>
+    <div style={{ padding: "0", backgroundColor: "#EFEFEF", height: "100vh", display: "flex", flexDirection: "column", overflow: "hidden" }}>
       {contextHolder}
-      <Row gutter={16}>
-        <Col span={12}>
-          <Card style={{ width: "100%", backgroundColor: "#F7B22C", borderRadius: '8px' }}>
-            <h1 style={{ textAlign: 'center' }}>ตรวจสอบตั๋ว</h1>
+
+      <Row gutter={0} style={{ flex: 1, height: "100%", overflow: "hidden", position: "relative" }}>
+        <Col
+          span={12}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            height: "100%",
+            padding: "20px",
+            position: "absolute",
+            left: 0,
+            width: "50%",
+          }}
+        >
+          <Card
+            style={{
+              backgroundColor: "#FFFFFF",
+              borderRadius: "12px",
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+              padding: "20px",
+              overflowY: "auto",
+              height: "calc(100vh - 40px)",
+            }}
+          >
+            <h1 style={{ textAlign: "center", color: "#333333", marginBottom: "16px" }}>ตรวจสอบตั๋ว</h1>
             <Divider />
-            <Form
-              form={form}
-              name="verification"
-              layout="vertical"
-              onFinish={handleVerification}
-              autoComplete="off"
-            >
-              <Row gutter={[16, 16]}>
-                <Col span={24}>
-                  <Form.Item
-                    label="หมายเลขตั๋ว"
-                    name="ticketNumber"
-                    rules={[{ required: true, message: "กรุณากรอกหมายเลขตั๋ว!" }]}
-                  >
-                    <Input placeholder="กรอกหมายเลขตั๋วที่นี่" />
-                  </Form.Item>
-                </Col>
-              </Row>
+            <Form form={form} name="verification" layout="vertical" onFinish={handleVerification} autoComplete="off">
+              <Form.Item
+                label="หมายเลขตั๋ว"
+                name="ticketNumber"
+                rules={[{ required: true, message: "กรุณากรอกหมายเลขตั๋ว!" }]}
+              >
+                <Input placeholder="กรอกหมายเลขตั๋วที่นี่" style={{ borderRadius: "8px" }} />
+              </Form.Item>
               <Row justify="end">
-                <Col>
-                  <Space>
-                    <Button htmlType="button" style={{ marginRight: "10px" }} onClick={handleCancel}>
-                      ยกเลิก
-                    </Button>
-                    <Button
-                      type="primary"
-                      htmlType="submit"
-                      icon={<PlusOutlined />}
-                      loading={loading}
-                    >
-                      ตรวจสอบ
-                    </Button>
-                  </Space>
-                </Col>
+                <Space>
+                  <Button onClick={handleCancel} style={{ borderRadius: "8px" }}>
+                    ยกเลิก
+                  </Button>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    icon={<PlusOutlined />}
+                    loading={loading}
+                    style={{ borderRadius: "8px", backgroundColor: "#F7B22C", borderColor: "#F7B22C" }}
+                  >
+                    ตรวจสอบ
+                  </Button>
+                </Space>
+
               </Row>
             </Form>
           </Card>
         </Col>
-        <Col span={12}>
-          <Card style={{ width: "100%", backgroundColor: '#FFF', borderRadius: '8px' }}>
-            <h2 style={{ textAlign: 'center' }}>รายการตั๋ว</h2>
+
+        <Col
+          span={12}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            height: "100%",
+            padding: "20px",
+            position: "absolute",
+            right: 0,
+            width: "50%",
+          }}
+        >
+          <Card
+            style={{
+              backgroundColor: "#FFFFFF",
+              borderRadius: "12px",
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+              padding: "20px",
+              overflowY: "auto",
+              height: "calc(100vh - 40px)",
+            }}
+          >
+            <h2 style={{ textAlign: "center", color: "#333333", marginBottom: "16px" }}>รายการตั๋ว</h2>
+            
+            <Form onFinish={FindBusTimeTickets}>
+            <Form.Item
+              name="findBusTimeTicket"
+              rules={[{ required: true, message: "กรุณาเลือกวันเวลาเดินทาง" }]} // เพิ่ม validation ให้แน่ใจว่ามีการเลือกค่า
+            >
+              <Select
+                allowClear
+                style={{ color: "black" }}
+                placeholder="เลือกวันเวลาเดินทาง"
+              >
+                {busRounds.map((item) => (
+            <Option
+              value={`${item.DepartureDay}---${item.DepartureTime}`} // ส่งออกเป็นค่าที่มีขีด
+              key={item.ID}
+            >
+              {item.DepartureDay}---{item.DepartureTime}
+            </Option>
+          ))}
+              </Select>
+            </Form.Item>
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                icon={<PlusOutlined />}
+                loading={loading}
+                style={{
+                  borderRadius: "8px",
+                  backgroundColor: "#F7B22C",
+                  borderColor: "#F7B22C",
+                }}
+              >
+                จัดไป
+              </Button>
+            </Form.Item>
+          </Form>
+
             <Table
               rowKey="ticketNumber"
               columns={columns}
-              dataSource={Verifier}
+              dataSource={verifier}
               pagination={false}
-              style={{ backgroundColor: '#FFF' }}
+              style={{ backgroundColor: "#FFF", borderRadius: "8px" }}
             />
           </Card>
         </Col>
       </Row>
-      <Layout>
-        {/* Removed SeatMap component */}
-      </Layout>
     </div>
   );
 };

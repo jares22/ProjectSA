@@ -14,7 +14,7 @@ type TicketVerification struct {
 	VerificationTime time.Time `gorm:"not null"` // Use time.Time for datetime
 	Status           string    `gorm:"not null"`
 	
-	Ticket           Ticket    `gorm:"foreignKey:TicketID"`
+	passenger           Passenger    `gorm:"foreignKey:TicketID"`
 	Driver        Drivers `gorm:"foreignKey:DriverID"`
 
 	BustimingID uint

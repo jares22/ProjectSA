@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="SirisakTourDatabaseForSA.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser query pragmas" current="1"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="3547"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="drivers" custom_title="0" dock_id="1" table="4,7:maindrivers"/><dock_state state="000000ff00000000fd0000000100000002000005f4000002defc0100000001fb000000160064006f0063006b00420072006f00770073006500310100000000000005f40000012200ffffff000002580000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="bus_timings" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="29"/><column index="2" value="68"/><column index="3" value="72"/><column index="4" value="68"/><column index="5" value="90"/><column index="6" value="95"/><column index="7" value="70"/><column index="8" value="75"/><column index="9" value="47"/><column index="10" value="58"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="drivers" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="29"/><column index="2" value="68"/><column index="3" value="72"/><column index="4" value="68"/><column index="5" value="47"/><column index="6" value="81"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="employees" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="29"/><column index="2" value="68"/><column index="3" value="72"/><column index="4" value="68"/><column index="5" value="63"/><column index="6" value="62"/><column index="7" value="62"/><column index="8" value="59"/><column index="9" value="53"/><column index="10" value="93"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="members" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="29"/><column index="2" value="68"/><column index="3" value="72"/><column index="4" value="68"/><column index="5" value="109"/><column index="6" value="93"/><column index="7" value="62"/><column index="8" value="59"/><column index="9" value="156"/><column index="10" value="85"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="route_data" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="29"/><column index="2" value="68"/><column index="3" value="72"/><column index="4" value="68"/><column index="5" value="63"/><column index="6" value="63"/><column index="7" value="55"/><column index="8" value="33"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="routes" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="29"/><column index="2" value="68"/><column index="3" value="72"/><column index="4" value="68"/><column index="5" value="76"/><column index="6" value="61"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1*">-- Inserting 10 data entries into Member table
+INSERT INTO Members (Username, Password, Firstname, Lastname, Email, Birthday) 
+VALUES 
+('john_doe', 'password123', 'John', 'Doe', 'john@example.com', '1990-01-01'),
+('jane_smith', 'securepass', 'Jane', 'Smith', 'jane@example.com', '1985-05-20'),
+('alice_walker', 'alicepass', 'Alice', 'Walker', 'alice@example.com', '1992-02-15'),
+('bob_marley', 'reggae123', 'Bob', 'Marley', 'bob@example.com', '1980-07-06'),
+('charlie_brown', 'charlie123', 'Charlie', 'Brown', 'charlie@example.com', '1991-09-09'),
+('david_clark', 'clarkpass', 'David', 'Clark', 'david@example.com', '1988-04-11'),
+('eve_adams', 'evepass', 'Eve', 'Adams', 'eve@example.com', '1989-11-03'),
+('frank_smith', 'frankpass', 'Frank', 'Smith', 'frank@example.com', '1993-08-19'),
+('grace_hopper', 'grace123', 'Grace', 'Hopper', 'grace@example.com', '1987-06-24'),
+('henry_ford', 'ford123', 'Henry', 'Ford', 'henry@example.com', '1994-03-22');
+
+-- Inserting 10 data entries into Employee table
+INSERT INTO Employees (Username, Password, Firstname, Lastname, Position, Phone_number) 
+VALUES 
+('emp1', 'pass123', 'Alice', 'Brown', 'Driver', '555-1234'),
+('emp2', 'pass456', 'Bob', 'Johnson', 'Manager', '555-5678'),
+('emp3', 'pass789', 'Clara', 'Smith', 'Conductor', '555-6789'),
+('emp4', 'pass012', 'Dan', 'Williams', 'Driver', '555-7890'),
+('emp5', 'pass345', 'Eva', 'Thompson', 'Driver', '555-8901'),
+('emp6', 'pass678', 'Frank', 'Brown', 'Mechanic', '555-9012'),
+('emp7', 'pass910', 'George', 'Taylor', 'Manager', '555-0123'),
+('emp8', 'pass112', 'Helen', 'Wilson', 'Conductor', '555-2345'),
+('emp9', 'pass314', 'Ian', 'Clark', 'Driver', '555-3456'),
+('emp10', 'pass516', 'Jack', 'Lewis', 'Driver', '555-4567');
+
+-- Inserting 10 data entries into Vehicles table
+INSERT INTO Vehicles (Type) 
+VALUES 
+('Bus Type A'), 
+('Bus Type B'), 
+('Bus Type C'), 
+('Bus Type D'), 
+('Bus Type E'), 
+('Bus Type F'), 
+('Bus Type G'), 
+('Bus Type H'), 
+('Bus Type I'), 
+('Bus Type J');
+
+-- Inserting 10 data entries into Drivers table
+INSERT INTO Drivers (bus_id, Employee_ID) 
+VALUES 
+(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), 
+(6, 6), (7, 7), (8, 8), (9, 9), (10, 10);
+
+-- Inserting 10 data entries into Route table
+INSERT INTO Routes (Name_Route, Routeway) 
+VALUES 
+('Route 1', 'City A - City B'), 
+('Route 2', 'City C - City D'), 
+('Route 3', 'City E - City F'), 
+('Route 4', 'City G - City H'), 
+('Route 5', 'City I - City J'), 
+('Route 6', 'City K - City L'), 
+('Route 7', 'City M - City N'), 
+('Route 8', 'City O - City P'), 
+('Route 9', 'City Q - City R'), 
+('Route 10', 'City S - City T');
+
+-- Inserting 10 data entries into BusTiming table
+INSERT INTO Bus_Timings (Departure_Day, Departure_Time, Return_Day, Return_Time, Bus_ID, Route_ID) 
+VALUES 
+('Monday', '08:00', 'Monday', '18:00', 1, 1),
+('Tuesday', '09:00', 'Tuesday', '19:00', 2, 2),
+('Wednesday', '10:00', 'Wednesday', '20:00', 3, 3),
+('Thursday', '11:00', 'Thursday', '21:00', 4, 4),
+('Friday', '12:00', 'Friday', '22:00', 5, 5),
+('Saturday', '13:00', 'Saturday', '23:00', 6, 6),
+('Sunday', '14:00', 'Sunday', '00:00', 7, 7),
+('Monday', '15:00', 'Monday', '01:00', 8, 8),
+('Tuesday', '16:00', 'Tuesday', '02:00', 9, 9),
+('Wednesday', '17:00', 'Wednesday', '03:00', 10, 10);
+
+-- Inserting 10 data entries into Seat table
+INSERT INTO Seats (Seat_Number, Bus_ID) 
+VALUES 
+(1, 1), (2, 1), (3, 2), (4, 2), (5, 3), 
+(6, 3), (7, 4), (8, 4), (9, 5), (10, 5);
+
+-- Inserting 10 data entries into Passenger table
+INSERT INTO Passengers (Ticket_Number, Username, Phone_Number, Seat_ID, Member_ID, Status) 
+VALUES 
+('T123', 'john_doe', '123-456-7890', 1, 1, 'Booked'),
+('T124', 'jane_smith', '098-765-4321', 2, 2, 'Checked-In'),
+('T125', 'alice_walker', '234-567-8901', 3, 3, 'Booked'),
+('T126', 'bob_marley', '345-678-9012', 4, 4, 'Checked-In'),
+('T127', 'charlie_brown', '456-789-0123', 5, 5, 'Booked'),
+('T128', 'david_clark', '567-890-1234', 6, 6, 'Checked-In'),
+('T129', 'eve_adams', '678-901-2345', 7, 7, 'Booked'),
+('T130', 'frank_smith', '789-012-3456', 8, 8, 'Checked-In'),
+('T131', 'grace_hopper', '890-123-4567', 9, 9, 'Booked'),
+('T132', 'henry_ford', '901-234-5678', 10, 10, 'Checked-In');
+
+-- Inserting 10 data entries into Payment table
+INSERT INTO Payments (Bus_Round, Passenger_ID) 
+VALUES 
+('2024-09-01 08:00:00', 1),
+('2024-09-02 09:00:00', 2),
+('2024-09-03 10:00:00', 3),
+('2024-09-04 11:00:00', 4),
+('2024-09-05 12:00:00', 5),
+('2024-09-06 13:00:00', 6),
+('2024-09-07 14:00:00', 7),
+('2024-09-08 15:00:00', 8),
+('2024-09-09 16:00:00', 9),
+('2024-09-10 17:00:00', 10);
+
+-- Inserting 10 data entries into TicketVerification table
+INSERT INTO Ticket_Verifications (Ticket_ID, Driver_ID, Verification_Time, Status, Bustiming_ID) 
+VALUES 
+(1, 1, '2024-09-01 08:30:00', 'Verified', 1),
+(2, 2, '2024-09-02 09:30:00', 'Verified', 2),
+(3, 3, '2024-09-03 10:30:00', 'Verified', 3),
+(4, 4, '2024-09-04 11:30:00', 'Verified', 4),
+(5, 5, '2024-09-05 12:30:00', 'Verified', 5),
+(6, 6, '2024-09-06 13:30:00', 'Verified', 6),
+(7, 7, '2024-09-07 14:30:00', 'Verified', 7),
+(8, 8, '2024-09-08 15:30:00', 'Verified', 8),
+(9, 9, '2024-09-09 16:30:00', 'Verified', 9),
+(10, 10, '2024-09-10 17:30:00', 'Verified', 10);
+
+-- Inserting 10 data entries into RouteData table
+INSERT INTO Route_Data (Province1, Province2, Distance, Time) 
+VALUES 
+('City A', 'City B', 150.5, 180),
+('City C', 'City D', 200.0, 240),
+('City E', 'City F', 120.5, 150),
+('City G', 'City H', 175.0, 200),
+('City I', 'City J', 300.0, 300),
+('City K', 'City L', 250.0, 270),
+('City M', 'City N', 180.0, 210),
+('City O', 'City P', 130.0, 160),
+('City Q', 'City R', 220.0, 230),
+('City S', 'City T', 190.0, 220);
+</sql><current_tab id="0"/></tab_sql></sqlb_project>
