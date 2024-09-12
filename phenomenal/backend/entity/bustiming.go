@@ -17,6 +17,6 @@ type BusTiming struct {
 	RouteID uint
 	Route   Route `gorm:"foreignKey:RouteID"`
 
-	TicketVerification []TicketVerification `gorm:"foreignKey:BustimingID"`
+	Passenger []Passenger `gorm:"foreignKey:BustimingID"`
 
 }

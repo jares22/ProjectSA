@@ -1,8 +1,8 @@
 export interface BusRound {
-    ID: any;
+    [x: string]: any;
+    BustimingID: string;
     DepartureDay: string;
     DepartureTime: string;
     ReturnDay: string;
     ReturnTime: string;
   }
-  

@@ -12,7 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const PORT = "8000"
+const PORT = "8001"
 
 func main() {
 	// Open connection to the database
@@ -29,10 +29,10 @@ func main() {
 	{
 		router.POST("/verify-ticket", controller.VerifyTicket)
 		router.GET("/ticket", controller.GetTicket)
-		router.PUT("/update-seat-status", controller.UpdateSeatStatus)
+		router.PATCH("/update-seat-status", controller.UpdateSeatStatus)
 		// router.GET("/getseatdetails", controller.GetSeatDetails)
 		r.GET("/bus-rounds", controller.GetBusRounds)
-		//r.GET("/verifiers", controller.GetVerifiers)
+		r.GET("/verifiers", controller.GetVerifiers)
 	}
 
 	r.GET("/", func(c *gin.Context) {

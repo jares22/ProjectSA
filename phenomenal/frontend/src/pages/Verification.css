@@ -1,0 +1,203 @@
+/* Global styles */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f2f5;
+  }
+  
+  #root {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Main container */
+  .container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    box-sizing: border-box;
+  }
+  
+  /* Row and Column styles for full-screen */
+  .ant-row {
+    flex: 1;
+    min-height: 0;
+  }
+  
+  .ant-col {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Card styles */
+  .ant-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    margin-bottom: 2rem;
+  }
+  
+  .ant-card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Typography */
+  .title-main {
+    font-size: 2.5rem;
+    color: #1a1a1a;
+    margin-bottom: 1rem;
+  }
+  
+  .title-secondary {
+    font-size: 2rem;
+    color: #1a1a1a;
+    margin-bottom: 1rem;
+  }
+  
+  /* Form styles */
+  .ant-form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .ant-form-item {
+    margin-bottom: 1rem;
+  }
+  
+  .ant-form-item-label > label {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .ant-input, .ant-select-selector {
+    border-radius: 8px !important;
+  }
+  
+  /* Button styles */
+  .ant-btn {
+    border-radius: 8px;
+    font-weight: bold;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .button-primary {
+    background-color: #F7B22C;
+    border-color: #F7B22C;
+  }
+  
+  .button-primary:hover, .button-primary:focus {
+    background-color: #e5a428;
+    border-color: #e5a428;
+  }
+  
+  /* Table styles */
+  .ant-table-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .ant-spin-nested-loading, 
+  .ant-spin-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .ant-table {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .ant-table-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .ant-table-body {
+    flex: 1;
+    overflow-y: auto;
+  }
+  
+  .ant-table-thead > tr > th {
+    background-color: #f7f7f7;
+    color: #333;
+    font-weight: bold;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .container {
+      padding: 1rem;
+    }
+  
+    .ant-col {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+  
+    .title-main {
+      font-size: 2rem;
+    }
+  
+    .title-secondary {
+      font-size: 1.5rem;
+    }
+  
+    .ant-form-item {
+      margin-bottom: 0.75rem;
+    }
+  
+    .ant-btn {
+      height: 36px;
+      font-size: 14px;
+    }
+  
+    .ant-table {
+      font-size: 14px;
+    }
+  }
+  
+  /* Additional responsive improvements */
+  @media (min-width: 769px) {
+    .container {
+      padding: 2rem;
+    }
+  
+    .ant-card {
+      margin-bottom: 0;
+    }
+  }
+  
+  /* Ensure buttons stack on small screens */
+  @media (max-width: 480px) {
+    .ant-space {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  
+    .ant-space-item {
+      margin-right: 0 !important;
+      margin-bottom: 8px;
+    }
+  
+    .ant-btn {
+      width: 100%;
+    }
+  }

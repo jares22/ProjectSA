@@ -162,16 +162,16 @@ func GetBusRounds(c *gin.Context) {
 
 //GetVerifiers retrieves all tickets based on the selected bus round
 func GetVerifiers(c *gin.Context) {
-	busRound := c.Query("busRound")
+	busRound := c.Query("BustimingID")
 	if busRound == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Bus round is required"})
 		return
 	}
 
-	var tickets []entity.Ticket
+	var tickets []entity.Passenger
 	db := config.DB()
 
-	result := db.Preload("Payment").Preload("Payment.Passenger").Preload("TicketVerification").Preload("TicketVerification.Driver").Preload("Payment.Passenger.Seat").Where("bus_round = ?", busRound).Find(&tickets)
+	result := db.Preload("BusTiming").Preload("Payment.Passenger").Preload("TicketVerification").Preload("TicketVerification.Driver").Preload("Payment.Passenger.Seat").Where("bus_round = ?", busRound).Find(&tickets)
 	if result.Error != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": result.Error.Error()})
 		return
