@@ -1,18 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { Col, Row, Card, Table, Space, Button, Divider, Form, Input, message, Select } from "antd";
 import { VerifyTicket, GetVerifiers, UpdateSeatStatus, fetchBusRounds, TicketVerifyTion } from "../services/https";
 import { TicketVerification } from "../interfaces/TicketVerification";
 import type { ColumnsType } from "antd/es/table";
-import { BusRound } from "../interfaces/busrounds"; // Assuming you use BusRound somewhere in the code
+import { BusRound } from "../interfaces/busrounds";
+import { QrReader } from 'react-qr-reader';
 
 import './Verification.css';
 
 const { Option } = Select;
-
-
-
-
 
 const Verifier: React.FC = () => {
     const columns: ColumnsType<TicketVerification> = [
@@ -37,9 +34,14 @@ const Verifier: React.FC = () => {
             key: "busID",
         },
         {
-            title: "Bus Round",
-            dataIndex: "passenger_id",
-            key: "busRoute",
+            title: "Depart Day",
+            dataIndex: "departdate",
+            key: "departdate",
+        },
+        {
+            title: "Depart Time",
+            dataIndex: "departtime",
+            key: "departtime",
         },
     ];
 
@@ -48,44 +50,54 @@ const Verifier: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
     const [busRounds, setBusRounds] = useState<BusRound[]>([]);
-
-
-
+    const [selectedRound, setSelectedRound] = useState<string>("");
 
     const handleVerification = async (values: TicketVerification) => {
         setLoading(true);
         try {
             const result = await VerifyTicket(values);
             console.log("VerifyTicket-->666", result);
-            setLoading(false);
-
+            
+    
             if (result) {
+                let newSeatStatus = "";
+                console.log("result.seat_status", result.seat_status);
+                if (result.status === "ตรวจสอบแล้ว") {
+                    newSeatStatus = "ยังไม่ตรวจสอบแล้ว";
+                } else {
+                    newSeatStatus = "สถานะปัจจุบันไม่สามารถตรวจสอบได้"; // หรือสถานะที่คุณต้องการให้แสดง
+                }
+            setLoading(false);
                 try {
                     await UpdateSeatStatus({
                         ticketNumber: result.ticket_number!,
-                        seatStatus: "ตรวจสอบแล้ว",
+                        seatStatus: newSeatStatus,
                     });
-
-
-                    messageApi.success(`การตรวจสอบสำเร็จ! หมายเลขตั๋ว: ${result.ticket_number}, สถานะที่นั่ง: ${result.seatStatus}`);
-
-
-                    // Create ticket verification record
+    
+                    messageApi.success(`การตรวจสอบสำเร็จ! หมายเลขตั๋ว: ${result.ticket_number}, สถานะที่นั่ง: ${newSeatStatus}`);
+    
                     const storedDriverId = localStorage.getItem("driver_id");
                     const driverId = storedDriverId ? parseInt(storedDriverId, 10) : 0;
-
-                    // Create ticket verification record
+    
                     const ticketVerificationData = {
                         passenger_id: result.passenger_id,
                         ticket_number: result.ticket_number!,
                         driver_id: driverId,
-                        status: "ตรวจสอบแล้ว"
+                        status: newSeatStatus
                     };
-
+    
                     await TicketVerifyTion(ticketVerificationData);
                     console.log("Ticket verification created successfully:", ticketVerificationData);
-
+    
                     form.resetFields();
+    
+                    // Refetch the data to update the table
+                    if (selectedRound) {
+                        const allData = selectedRound.split(',');
+                        const bustiming_id = allData[2].trim();
+                        const newResult = await GetVerifiers(bustiming_id);
+                        setVerifier(newResult);
+                    }
                 } catch (updateError) {
                     const errorMessage = (updateError as Error).message || "อัพเดตสถานะที่นั่งไม่สำเร็จ!";
                     messageApi.error(`อัพเดตสถานะที่นั่งไม่สำเร็จ! ${errorMessage}`);
@@ -99,72 +111,48 @@ const Verifier: React.FC = () => {
             messageApi.error(`เกิดข้อผิดพลาดในการเชื่อมต่อ! ${errorMessage}`);
         }
     };
-
-
+    
     const handleCancel = () => {
         form.resetFields();
         messageApi.info("การกรอกข้อมูลถูกยกเลิก");
     };
 
-    // const getVerifiers = async () => {
-    //     try {
-
-    //         const res = await GetVerifiers();
-    //         console.log("GetVerifiers-->", res);
-    //         if (res) {
-    //             setVerifier(res);
-
-    //         }
-    //     } catch (error) {
-    //         console.error("Error fetching verifiers:", error);
-
-    //     }
-    // };
-
     const getBusRounds = async () => {
         try {
-
             const res = await fetchBusRounds();
             console.log("fetchBusRounds-->", res);
             if (res) {
                 setBusRounds(res);
-
             }
         } catch (error) {
             console.error("Error fetching bus rounds:", error);
-
         }
     };
 
     const FindBusTimeTickets = async (values: any) => {
-        // Split the selected value to get day, time, and bustiming_id
         const allData = values.findBusTimeTicket.split(',');
         const day = allData[0].trim();
         const time = allData[1].trim();
-        const bustiming_id = allData[2].trim(); // Assuming the ID is included
+        const bustiming_id = allData[2].trim();
 
         console.log("Day:", day);
         console.log("Time:", time);
         console.log("Bustiming ID:", bustiming_id);
 
         try {
-            // Display selected travel date and time
-            //messageApi.info(`คุณเลือกวันเวลาเดินทาง: ${day} เวลา ${time}`);
-
-
-            // Fetch tickets using bustiming_id
             const result = await GetVerifiers(bustiming_id);
             setVerifier(result);
-
+            console.log("GetVerifiers--..>", result);
             messageApi.success("ค้นหาตั๋วสำเร็จ!");
+
         } catch (error) {
             console.error("Error fetching tickets:", error);
             messageApi.error("ค้นหาตั๋วล้มเหลว!");
         }
     };
 
-    // Function to handle changes in the travel round dropdown
     const handleRoundChange = (value: string) => {
+        setSelectedRound(value); // Store the selected round
         const allData = value.split(',');
         const day = allData[0].trim();
         const time = allData[1].trim();
@@ -175,9 +163,12 @@ const Verifier: React.FC = () => {
         console.log("Selected Round:", value);
     };
 
+    const handleQRScan = (data: string) => {
+        form.setFieldsValue({ ticketNumber: data });
+        //handleVerification({ ticketNumber: data });
+    };
 
     useEffect(() => {
-        //getVerifiers();
         getBusRounds();
     }, []);
 
@@ -205,8 +196,7 @@ const Verifier: React.FC = () => {
                                 label="หมายเลขตั๋ว"
                                 name="ticketNumber"
                                 className="form-item"
-                                rules={[{ required: true, message: "กรุณากรอกหมายเลขตั๋ว!" }]}
-                            >
+                                rules={[{ required: true, message: "กรุณากรอกหมายเลขตั๋ว!" }]}>
                                 <Input placeholder="กรอกหมายเลขตั๋วที่นี่" style={{ borderRadius: "8px" }} />
                             </Form.Item>
                             <Row justify="end">
@@ -219,13 +209,14 @@ const Verifier: React.FC = () => {
                                         htmlType="submit"
                                         icon={<PlusOutlined />}
                                         loading={loading}
-                                        className="button-primary"
-                                    >
+                                        className="button-primary">
                                         ตรวจสอบ
                                     </Button>
                                 </Space>
                             </Row>
                         </Form>
+                        <Divider />
+                        {/* <QRScanner onScan={handleQRScan} /> */}
                     </Card>
                 </Col>
 
@@ -247,52 +238,29 @@ const Verifier: React.FC = () => {
                             <Form.Item
                                 name="findBusTimeTicket"
                                 className="form-item"
-                                rules={[{ required: true, message: "กรุณาเลือกวันเวลาเดินทาง" }]}
-                            >
-                                <Select
-                                    allowClear
-                                    style={{ color: "black" }}
-                                    placeholder="เลือกวันเวลาเดินทาง"
-                                    onChange={handleRoundChange}
-                                >
-                                    {busRounds.map((item) => (
-                                        <Option
-                                            value={`${item.departure_day},${item.departure_time},${item.id}`}
-                                            key={`${item.id}-${item.departure_day}-${item.departure_time}`}
-                                        >
-                                            {item.departure_day} {item.departure_time}
+                                rules={[{ required: true, message: "กรุณาเลือกวันและเวลาเดินทาง!" }]}>
+                                <Select placeholder="เลือกวันและเวลาเดินทาง" onChange={handleRoundChange}>
+                                    {busRounds.map((round) => (
+                                        <Option key={`${round.id}-${round.departure_day}-${round.departure_time}`} value={`${round.departure_day}, ${round.departure_time}, ${round.id}`}>
+                                            {round.departure_day} - {round.departure_time}
                                         </Option>
                                     ))}
                                 </Select>
-                            </Form.Item>
 
-                            <Form.Item>
-                                <Button
-                                    type="primary"
-                                    htmlType="submit"
-                                    icon={<PlusOutlined />}
-                                    loading={loading}
-                                    className="button-primary"
-                                >
-                                    จัดไป
+                            </Form.Item>
+                            <Row justify="end">
+                                <Button type="primary" htmlType="submit" className="button-primary">
+                                    ค้นหาตั๋ว
                                 </Button>
-                            </Form.Item>
+                            </Row>
                         </Form>
-
-                        <div className="scrollable-table">
-                            <Table
-                                rowKey="ticket_number"
-                                columns={columns}
-                                dataSource={verifierValue}
-                                pagination={false} // Disable pagination
-                            />
-                        </div>
+                        <Divider />
+                        <Table columns={columns} dataSource={verifierValue} rowKey="ticket_number" scroll={{ y: 400 }} />
                     </Card>
                 </Col>
             </Row>
         </div>
     );
-
 };
 
 export default Verifier;

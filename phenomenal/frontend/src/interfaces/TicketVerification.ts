@@ -7,6 +7,8 @@ export interface TicketVerification {
     seat_status: string;
     ticket_number: string; 
     bustiming_id?: number;
+    departure_day?: string;
+    departure_time?: string;
 }
 
 // TicketVerificationResponse represents the response structure for ticket verification

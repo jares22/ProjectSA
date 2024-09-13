@@ -33,6 +33,7 @@ func main() {
 		r.GET("/bus-rounds", controller.GetBusRounds)
 		r.GET("/verifiers", controller.GetVerifiers)
 		router.POST("/ticket-verifications", controller.CreateTicketVerification)
+		router.POST("/ticket-verificationss", controller.TicketVerification)
 		
 	}
 
