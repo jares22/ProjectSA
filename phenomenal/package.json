@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "react-qr-scanner": "^1.0.0-alpha.11"
+  },
+  "devDependencies": {
+    "@types/react-qr-reader": "^2.1.7"
+  }
+}

@@ -7,11 +7,12 @@ import (
 	"sirisaktour/config"
 	"sirisaktour/entity"
 	"strconv"
-	//"time"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
+
 
 type TicketRequest struct {
 	TicketNumber string `json:"ticketNumber" binding:"required"`
@@ -28,6 +29,10 @@ type TicketResponse struct {
 	TicketNumber string `json:"ticket_number"`
 	SeatStatus   string `json:"seatStatus"`
 }
+
+
+
+
 
 func VerifyTicket(c *gin.Context) {
 	var req TicketRequest
@@ -46,25 +51,28 @@ func VerifyTicket(c *gin.Context) {
 	result := config.DB().First(&passenger, "ticket_number = ?", req.TicketNumber)
 	if result.Error != nil {
 		c.JSON(http.StatusNotFound, gin.H{"message": "Ticket not found"})
+		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "Ticket verified successfully", "ticket_number": passenger.TicketNumber, "seatStatus": passenger.Status})
-	
+
+	// Respond with the ticket details
+	c.JSON(http.StatusOK, gin.H{
+		"message":       "Ticket verified successfully",
+		"ticket_number": passenger.TicketNumber,
+		"username":      passenger.Username,
+		"phone_number":  passenger.PhoneNumber,
+		"seat_id":       passenger.SeatID,
+		"member_id":     passenger.MemberID,
+		"status":        passenger.Status,
+		"bus_timing_id": passenger.BustimingID,
+		"passenger_id":  passenger.ID, // Use `ID` from gorm.Model
+	})
 }
 
-// func VerifyTicket(c *gin.Context) {
 
-// 	var passenger entity.Passenger
-// 	if err := c.ShouldBindJSON(&passenger); err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request format"})
-// 		return
-// 	}
 
-// 	db := config.DB()
 
-// 	db.Find(&passenger, "ticket_number = ?", passenger.TicketNumber)
 
-// 	c.JSON(http.StatusOK, gin.H{"message": "Ticket verified successfully", "ticket_number": passenger.TicketNumber, "seatStatus": passenger.Status})
-// }
+
 
 
 // UpdateSeatStatusRequest represents the structure of the request payload for updating seat status
@@ -104,47 +112,54 @@ func UpdateSeatStatus(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Seat status updated successfully"})
 }
 
+
+
+
+
 // UpdateSeatStatus updates the seat status in the database
-func GetTicket(c *gin.Context) {
+// func GetTicket(c *gin.Context) {
 
-	var passengers []entity.Passenger
+// 	var passengers []entity.Passenger
 
-	// Initialize DB connection
-	db := config.DB()
+// 	// Initialize DB connection
+// 	db := config.DB()
 
-	// Fetch all passengers without preloading related data
-	results := db.Preload("Seat").Find(&passengers)
+// 	// Fetch all passengers without preloading related data
+// 	results := db.Preload("Seat").Find(&passengers)
 
-	if results.Error != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": results.Error.Error()})
-		return
-	}
+// 	if results.Error != nil {
+// 		c.JSON(http.StatusNotFound, gin.H{"error": results.Error.Error()})
+// 		return
+// 	}
 
-	// Define the response structure for tickets
-	type TicketResponse struct {
-		PassengerID  uint   `json:"passenger_id"`
-		TicketNumber string `json:"ticket_number"`
-		SeatStatus   string `json:"seat_status"`
-		PhoneNumber  string `json:"phone_number"`
-		BusID        uint   `json:"bus_id"` // Assuming Seat has a BusID field
-	}
+// 	// Define the response structure for tickets
+// 	type TicketResponse struct {
+// 		PassengerID  uint   `json:"passenger_id"`
+// 		TicketNumber string `json:"ticket_number"`
+// 		SeatStatus   string `json:"seat_status"`
+// 		PhoneNumber  string `json:"phone_number"`
+// 		BusID        uint   `json:"bus_id"` // Assuming Seat has a BusID field
+// 	}
 
-	var response []TicketResponse
+// 	var response []TicketResponse
 
-	// Loop through passengers to build the response
-	for _, passenger := range passengers {
-		response = append(response, TicketResponse{
-			PassengerID:  passenger.ID, // Include passenger ID in the response
-			TicketNumber: passenger.TicketNumber,
-			SeatStatus:   passenger.Status,
-			PhoneNumber:  passenger.PhoneNumber,
-			BusID:        passenger.Seat.BusID, // Assuming Seat has a BusID field
-		})
-	}
+// 	// Loop through passengers to build the response
+// 	for _, passenger := range passengers {
+// 		response = append(response, TicketResponse{
+// 			PassengerID:  passenger.ID, // Include passenger ID in the response
+// 			TicketNumber: passenger.TicketNumber,
+// 			SeatStatus:   passenger.Status,
+// 			PhoneNumber:  passenger.PhoneNumber,
+// 			BusID:        passenger.Seat.BusID, // Assuming Seat has a BusID field
+// 		})
+// 	}
 
-	// Send the formatted response back
-	c.JSON(http.StatusOK, response)
-}
+// 	// Send the formatted response back
+// 	c.JSON(http.StatusOK, response)
+// }
+
+
+
 
 func GetBusRounds(c *gin.Context) {
 	var busRounds []struct {
@@ -166,49 +181,6 @@ func GetBusRounds(c *gin.Context) {
 
 
 
-// //GetVerifiers retrieves all tickets based on the selected bus round
-// func GetVerifiers(c *gin.Context) {
-// 	busRound := c.Query("busRound")
-// 	if busRound == "" {
-// 		c.JSON(http.StatusBadRequest, gin.H{"error": "Bus round is required"})
-// 		return
-// 	}
-
-// 	var tickets []entity.Passenger
-// 	db := config.DB()
-
-// 	result := db.Preload("Payment").Preload("Payment.Passenger").Preload("TicketVerification").Preload("TicketVerification.Driver").Preload("Payment.Passenger.Seat").Where("bus_round = ?", busRound).Find(&tickets)
-// 	if result.Error != nil {
-// 		c.JSON(http.StatusNotFound, gin.H{"error": result.Error.Error()})
-// 		return
-// 	}
-
-// 	type TicketResponse struct {
-// 		TicketNumber string `json:"ticket_number"`
-// 		SeatStatus   string `json:"seat_status"`
-// 		PhoneNumber  string `json:"phone_number"`
-// 		BusID        uint   `json:"bus_id"`
-// 		BusRoute     string `json:"bus_route"`
-// 	}
-
-// 	var response []TicketResponse
-
-// 	for _, ticket := range tickets {
-// 		passenger := ticket.Payment.Passenger
-// 		busID := ticket.Payment.Passenger.Seat.BusID
-// 		busRoute := ticket.Payment.BusRound.Format("2006-01-02 15:04:05")
-
-// 		response = append(response, TicketResponse{
-// 			TicketNumber: ticket.TicketNumber,
-// 			SeatStatus:   ticket.SeatStatus,
-// 			PhoneNumber:  passenger.PhoneNumber,
-// 			BusID:        busID,
-// 			BusRoute:     busRoute,
-// 		})
-// 	}
-
-// 	c.JSON(http.StatusOK, response)
-// }
 
 
 
@@ -272,4 +244,41 @@ func GetVerifiers(c *gin.Context) {
 
     // Send the formatted response back
     c.JSON(http.StatusOK, response)
+}
+
+
+
+
+type RequestBody struct {
+	TicketNumber uint   `json:"passenger_id"`
+	DriverID uint   `json:"driver_id"`
+	Status   string `json:"status"`
+}
+
+func CreateTicketVerification(c *gin.Context) {
+	var requestBody RequestBody
+
+	// Parse the request body
+	if err := c.BindJSON(&requestBody); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
+		return
+	}
+
+	// Initialize database connection
+	db := config.DB()
+
+	// Create new TicketVerification record
+	newVerification := entity.TicketVerification{
+		TicketID:         requestBody.TicketNumber,
+		DriverID:         requestBody.DriverID,
+		VerificationTime: time.Now(),  // Set the current time as VerificationTime
+		Status:           requestBody.Status,
+	}
+
+	if result := db.Create(&newVerification); result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Ticket verification created successfully", "data": newVerification})
 }

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { Col, Row, Card, Table, Space, Button, Divider, Form, Input, message, Select } from "antd";
-import { VerifyTicket, GetVerifiers, UpdateSeatStatus, fetchBusRounds } from "../services/https";
+import { VerifyTicket, GetVerifiers, UpdateSeatStatus, fetchBusRounds, TicketVerifyTion } from "../services/https";
 import { TicketVerification } from "../interfaces/TicketVerification";
 import type { ColumnsType } from "antd/es/table";
 import { BusRound } from "../interfaces/busrounds"; // Assuming you use BusRound somewhere in the code
-import { useNavigate } from "react-router-dom";
+
 import './Verification.css';
 
 const { Option } = Select;
@@ -48,10 +48,10 @@ const Verifier: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
     const [busRounds, setBusRounds] = useState<BusRound[]>([]);
-    const [selectedRound, setSelectedRound] = useState<string | undefined>();
 
 
-    
+
+
     const handleVerification = async (values: TicketVerification) => {
         setLoading(true);
         try {
@@ -65,7 +65,26 @@ const Verifier: React.FC = () => {
                         ticketNumber: result.ticket_number!,
                         seatStatus: "ตรวจสอบแล้ว",
                     });
+
+
                     messageApi.success(`การตรวจสอบสำเร็จ! หมายเลขตั๋ว: ${result.ticket_number}, สถานะที่นั่ง: ${result.seatStatus}`);
+
+
+                    // Create ticket verification record
+                    const storedDriverId = localStorage.getItem("driver_id");
+                    const driverId = storedDriverId ? parseInt(storedDriverId, 10) : 0;
+
+                    // Create ticket verification record
+                    const ticketVerificationData = {
+                        passenger_id: result.passenger_id,
+                        ticket_number: result.ticket_number!,
+                        driver_id: driverId,
+                        status: "ตรวจสอบแล้ว"
+                    };
+
+                    await TicketVerifyTion(ticketVerificationData);
+                    console.log("Ticket verification created successfully:", ticketVerificationData);
+
                     form.resetFields();
                 } catch (updateError) {
                     const errorMessage = (updateError as Error).message || "อัพเดตสถานะที่นั่งไม่สำเร็จ!";
@@ -79,9 +98,8 @@ const Verifier: React.FC = () => {
             const errorMessage = (error as Error).message || "เกิดข้อผิดพลาดในการเชื่อมต่อ!";
             messageApi.error(`เกิดข้อผิดพลาดในการเชื่อมต่อ! ${errorMessage}`);
         }
-
-
     };
+
 
     const handleCancel = () => {
         form.resetFields();
@@ -120,7 +138,7 @@ const Verifier: React.FC = () => {
 
     const FindBusTimeTickets = async (values: any) => {
         // Split the selected value to get day, time, and bustiming_id
-        const allData = values.findBusTimeTicket.split('---');
+        const allData = values.findBusTimeTicket.split(',');
         const day = allData[0].trim();
         const time = allData[1].trim();
         const bustiming_id = allData[2].trim(); // Assuming the ID is included
@@ -131,7 +149,8 @@ const Verifier: React.FC = () => {
 
         try {
             // Display selected travel date and time
-            messageApi.info(`คุณเลือกวันเวลาเดินทาง: ${day} เวลา ${time}`);
+            //messageApi.info(`คุณเลือกวันเวลาเดินทาง: ${day} เวลา ${time}`);
+
 
             // Fetch tickets using bustiming_id
             const result = await GetVerifiers(bustiming_id);
@@ -146,8 +165,13 @@ const Verifier: React.FC = () => {
 
     // Function to handle changes in the travel round dropdown
     const handleRoundChange = (value: string) => {
-        setSelectedRound(value);
-        messageApi.info(`คุณเลือกวันเวลาเดินทาง: ${value}`);
+        const allData = value.split(',');
+        const day = allData[0].trim();
+        const time = allData[1].trim();
+
+        console.log("Day:", day);
+        console.log("Time:", time);
+        messageApi.info(`คุณเลือกวันเวลาเดินทาง: ${day} เวลา ${time}`);
         console.log("Selected Round:", value);
     };
 
@@ -158,10 +182,21 @@ const Verifier: React.FC = () => {
     }, []);
 
     return (
-        <div>
+        <div className="container">
             {contextHolder}
-            <Row gutter={32}>
-                <Col span={12}>
+            <Row gutter={0} style={{ flex: 1, height: "100%", overflow: "hidden", position: "relative" }}>
+                <Col
+                    span={12}
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        height: "50%",
+                        padding: "20px",
+                        left: 0,
+                        width: "50%",
+                    }}
+                >
                     <Card className="card">
                         <h1 className="title-main">ตรวจสอบตั๋ว</h1>
                         <Divider />
@@ -169,6 +204,7 @@ const Verifier: React.FC = () => {
                             <Form.Item
                                 label="หมายเลขตั๋ว"
                                 name="ticketNumber"
+                                className="form-item"
                                 rules={[{ required: true, message: "กรุณากรอกหมายเลขตั๋ว!" }]}
                             >
                                 <Input placeholder="กรอกหมายเลขตั๋วที่นี่" style={{ borderRadius: "8px" }} />
@@ -183,7 +219,7 @@ const Verifier: React.FC = () => {
                                         htmlType="submit"
                                         icon={<PlusOutlined />}
                                         loading={loading}
-                                        style={{ borderRadius: "8px", backgroundColor: "#F7B22C", borderColor: "#F7B22C" }}
+                                        className="button-primary"
                                     >
                                         ตรวจสอบ
                                     </Button>
@@ -193,12 +229,24 @@ const Verifier: React.FC = () => {
                     </Card>
                 </Col>
 
-                <Col span={12}>
-                    <Card>
+                <Col
+                    span={12}
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "right",
+                        height: "100%",
+                        padding: "20px",
+                        right: 0,
+                        width: "50%",
+                    }}
+                >
+                    <Card className="card">
                         <h2 className="title-secondary">รายการตั๋ว</h2>
                         <Form onFinish={FindBusTimeTickets}>
                             <Form.Item
                                 name="findBusTimeTicket"
+                                className="form-item"
                                 rules={[{ required: true, message: "กรุณาเลือกวันเวลาเดินทาง" }]}
                             >
                                 <Select
@@ -209,11 +257,10 @@ const Verifier: React.FC = () => {
                                 >
                                     {busRounds.map((item) => (
                                         <Option
-                                            // Include bustiming_id in the value, separated by '---'
-                                            value={`${item.departure_day}---${item.departure_time}---${item.id}`}
+                                            value={`${item.departure_day},${item.departure_time},${item.id}`}
                                             key={`${item.id}-${item.departure_day}-${item.departure_time}`}
                                         >
-                                            {item.departure_day}---{item.departure_time}
+                                            {item.departure_day} {item.departure_time}
                                         </Option>
                                     ))}
                                 </Select>
@@ -232,17 +279,20 @@ const Verifier: React.FC = () => {
                             </Form.Item>
                         </Form>
 
-                        <Table
-                            rowKey="ticket_number"
-                            columns={columns}
-                            dataSource={verifierValue}
-                            pagination={{ pageSize: 5 }}
-                        />
+                        <div className="scrollable-table">
+                            <Table
+                                rowKey="ticket_number"
+                                columns={columns}
+                                dataSource={verifierValue}
+                                pagination={false} // Disable pagination
+                            />
+                        </div>
                     </Card>
                 </Col>
             </Row>
         </div>
     );
+
 };
 
 export default Verifier;

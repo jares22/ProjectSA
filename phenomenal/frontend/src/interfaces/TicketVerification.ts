@@ -27,3 +27,10 @@ export interface UpdateSeatStatusRequest {
 // src/interfaces/Ticket.ts
 
   
+export interface CreateTicketVerification {
+    //[x: string]: string;
+    passenger_id: number;
+    ticket_number: string;
+    driver_id: number;
+    
+}

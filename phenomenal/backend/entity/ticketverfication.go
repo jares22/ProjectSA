@@ -18,3 +18,7 @@ type TicketVerification struct {
 	Driver        Drivers `gorm:"foreignKey:DriverID"`
 
 }
+
+
+
+

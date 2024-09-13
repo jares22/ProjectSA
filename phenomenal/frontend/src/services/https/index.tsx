@@ -1,8 +1,10 @@
 // services/https/index.ts
-import { TicketVerification, TicketVerificationResponse, UpdateSeatStatusRequest } from "../../interfaces/TicketVerification";
+import { TicketVerification, UpdateSeatStatusRequest,CreateTicketVerification } from "../../interfaces/TicketVerification";
 import { BusRound } from "../../interfaces/busrounds";
 
 const apiUrl = "http://localhost:8001";
+
+
 
 // Verify Ticket Function
 export async function VerifyTicket(data: TicketVerification) {
@@ -11,6 +13,7 @@ export async function VerifyTicket(data: TicketVerification) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   };
+  console.log("หาอยู่ๆ->", requestOptions);
 
   // ส่งคำขอไปยัง API ที่ URL ที่กำหนดใน apiUrl
   const res = await fetch(`${apiUrl}/verify-ticket`, requestOptions).then((res) => {
@@ -49,6 +52,9 @@ export async function VerifyTicket(data: TicketVerification) {
 //   return res;
 // }
 
+
+
+
 export async function GetVerifiers(bustiming_id?: string): Promise<TicketVerification[]> {
   const requestOptions = {
     method: "GET",
@@ -65,6 +71,9 @@ export async function GetVerifiers(bustiming_id?: string): Promise<TicketVerific
     throw new Error("Failed to fetch verifiers");
   }
 }
+
+
+
 
 // Update Seat Status Function
 export async function UpdateSeatStatus(data: UpdateSeatStatusRequest): Promise<void> {
@@ -86,6 +95,10 @@ export async function UpdateSeatStatus(data: UpdateSeatStatusRequest): Promise<v
     throw new Error((error as Error).message || "Connection error!");
   }
 }
+
+
+
+
 
 // Fetch Bus Rounds Function
 export async function fetchBusRounds(): Promise<BusRound[]> {
@@ -110,3 +123,30 @@ export async function fetchBusRounds(): Promise<BusRound[]> {
 
 
 
+
+export async function TicketVerifyTion(data: CreateTicketVerification) {
+  const requestOptions: RequestInit = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  };
+  console.log("TicketVerifyTion->", requestOptions);
+
+  try {
+    const response = await fetch(`${apiUrl}/ticket-verifications`, requestOptions);
+
+    if (!response.ok) {
+      // Handle errors if the response is not OK
+      const errorText = await response.text();
+      throw new Error(`Error: ${response.status} - ${errorText}`);
+    }
+
+    const result = await response.json();
+    return result;  // Successfully parsed response
+
+  } catch (error) {
+    // Handle fetch errors
+    console.error("Error occurred while creating ticket verification:", error);
+    throw error;
+  }
+}
