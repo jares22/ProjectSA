@@ -1,17 +1,26 @@
 package entity
 
 import (
-	"time"
+
+	
 
 	"gorm.io/gorm"
 )
 
 type Payment struct {
+
 	gorm.Model
-	BusRound    time.Time // Correcting the type to time.Time
-	PassengerID uint      // Foreign key reference to Passenger
+	Departure  	string
+	Destination	string
+	Date 		string//time.Time
+	Status 		string
+	Timestamp 	string//time.Time
+	Total		float32 
+	Image		string `gorm:"type:longtext"`
 
-	Passenger Passenger `gorm:"foreignKey:PassengerID"` // Defining the relation with Passenger
+	BustimingID uint
+	BusTiming BusTiming `gorm:"foreignKey:BustimingID"`
 
+	Passenger []Passenger `gorm:"foreignKey:PaymentID"`
 
 }

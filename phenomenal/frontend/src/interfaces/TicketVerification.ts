@@ -4,8 +4,8 @@ export interface TicketVerification {
     bus_id: number;
     passenger_id: number;
     phone_number: string;
-    seat_status: string;
-    ticket_number: string; 
+    status: string;
+    key_ticket: string; 
     bustiming_id?: number;
     departure_day?: string;
     departure_time?: string;
@@ -22,8 +22,8 @@ export interface TicketVerificationResponse {
 
 // UpdateSeatStatusRequest represents the request body for updating seat status
 export interface UpdateSeatStatusRequest {
-    ticketNumber: string;
-    seatStatus: string;
+    key_ticket: string;
+    Status: string;
 }
 
 // src/interfaces/Ticket.ts
@@ -32,7 +32,6 @@ export interface UpdateSeatStatusRequest {
 export interface CreateTicketVerification {
     //[x: string]: string;
     passenger_id: number;
-    ticket_number: string;
     driver_id: number;
-    
+    status: string;
 }

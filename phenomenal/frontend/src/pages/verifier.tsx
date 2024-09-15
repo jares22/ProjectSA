@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { Col, Row, Card, Table, Space, Button, Divider, Form, Input, message, Select } from "antd";
-import { VerifyTicket, GetVerifiers, UpdateSeatStatus, fetchBusRounds, TicketVerifyTion } from "../services/https";
+import { VerifyTicket, GetVerifiers, UpdateSeatStatus, fetchBusRounds, TicketVerifycation } from "../services/https";
 import { TicketVerification } from "../interfaces/TicketVerification";
 import type { ColumnsType } from "antd/es/table";
 import { BusRound } from "../interfaces/busrounds";
@@ -9,18 +9,55 @@ import { QrReader } from 'react-qr-reader';
 
 import './Verification.css';
 
+interface QRScannerProps {
+    onScan: (data: string) => void;
+  }
+  
+  const QRScanner: React.FC<QRScannerProps> = ({ onScan }) => {
+    const [startScan, setStartScan] = useState(false);
+  
+    const handleScan = (result: any) => {
+      if (result) {
+        onScan(result?.text);
+        setStartScan(false);
+        message.success('QR Code scanned successfully!');
+      }
+    };
+  
+    const handleError = (error: any) => {
+      console.error(error);
+      message.error('Error scanning QR Code');
+    };
+  
+    return (
+      <div>
+        <Button onClick={() => setStartScan(!startScan)} style={{ marginBottom: '10px' }}>
+          {startScan ? 'Stop Scan' : 'Start QR Scan'}
+        </Button>
+        {startScan && (
+          <QrReader
+            onResult={handleScan}
+            constraints={{ facingMode: 'environment' }}
+            containerStyle={{ width: '300px', height: '300px' }}
+          />
+        )}
+      </div>
+    );
+  };
+
+
 const { Option } = Select;
 
 const Verifier: React.FC = () => {
     const columns: ColumnsType<TicketVerification> = [
         {
             title: "Ticket Number",
-            dataIndex: "ticket_number",
+            dataIndex: "key_ticket",
             key: "ticketNumber",
         },
         {
             title: "Seat Status",
-            dataIndex: "seat_status",
+            dataIndex: "status",
             key: "seatStatus",
         },
         {
@@ -60,33 +97,33 @@ const Verifier: React.FC = () => {
             
     
             if (result) {
-                let newSeatStatus = "";
-                console.log("result.seat_status", result.seat_status);
-                if (result.status === "ตรวจสอบแล้ว") {
-                    newSeatStatus = "ยังไม่ตรวจสอบแล้ว";
+                let newStatus = "";
+                console.log("result.status", result.status);
+                if (result.status === "Pass") {
+                    newStatus = "Verified";
                 } else {
-                    newSeatStatus = "สถานะปัจจุบันไม่สามารถตรวจสอบได้"; // หรือสถานะที่คุณต้องการให้แสดง
+                    newStatus = "สถานะปัจจุบันไม่สามารถตรวจสอบได้"; // หรือสถานะที่คุณต้องการให้แสดง
                 }
             setLoading(false);
                 try {
                     await UpdateSeatStatus({
-                        ticketNumber: result.ticket_number!,
-                        seatStatus: newSeatStatus,
-                    });
+                        key_ticket: result.key_ticket!,
+                        Status: newStatus,
+                      });
     
-                    messageApi.success(`การตรวจสอบสำเร็จ! หมายเลขตั๋ว: ${result.ticket_number}, สถานะที่นั่ง: ${newSeatStatus}`);
+                    messageApi.success(`การตรวจสอบสำเร็จ! หมายเลขตั๋ว: ${result.ticket_number}, สถานะที่นั่ง: ${newStatus}`);
     
-                    const storedDriverId = localStorage.getItem("driver_id");
-                    const driverId = storedDriverId ? parseInt(storedDriverId, 10) : 0;
+                    // const storedDriverId = localStorage.getItem("driver_id");
+                     const driverId = 1;
+                    //  storedDriverId ? parseInt(storedDriverId, 10) : 1;
     
                     const ticketVerificationData = {
                         passenger_id: result.passenger_id,
-                        ticket_number: result.ticket_number!,
                         driver_id: driverId,
-                        status: newSeatStatus
+                        status: newStatus
                     };
-    
-                    await TicketVerifyTion(ticketVerificationData);
+                    console.log("TicketVerificationData:", ticketVerificationData);
+                    await TicketVerifycation(ticketVerificationData);
                     console.log("Ticket verification created successfully:", ticketVerificationData);
     
                     form.resetFields();
@@ -120,7 +157,7 @@ const Verifier: React.FC = () => {
     const getBusRounds = async () => {
         try {
             const res = await fetchBusRounds();
-            console.log("fetchBusRounds-->", res);
+            console.log("1:ดึงเวลาของรถมาเลือก", res);
             if (res) {
                 setBusRounds(res);
             }
@@ -137,7 +174,7 @@ const Verifier: React.FC = () => {
 
         console.log("Day:", day);
         console.log("Time:", time);
-        console.log("Bustiming ID:", bustiming_id);
+        //console.log("Bustiming ID:", bustiming_id);
 
         try {
             const result = await GetVerifiers(bustiming_id);
@@ -164,7 +201,7 @@ const Verifier: React.FC = () => {
     };
 
     const handleQRScan = (data: string) => {
-        form.setFieldsValue({ ticketNumber: data });
+        form.setFieldsValue({ key_ticket: data });
         //handleVerification({ ticketNumber: data });
     };
 
@@ -194,7 +231,7 @@ const Verifier: React.FC = () => {
                         <Form form={form} name="verification" layout="vertical" onFinish={handleVerification} autoComplete="off">
                             <Form.Item
                                 label="หมายเลขตั๋ว"
-                                name="ticketNumber"
+                                name="key_ticket"
                                 className="form-item"
                                 rules={[{ required: true, message: "กรุณากรอกหมายเลขตั๋ว!" }]}>
                                 <Input placeholder="กรอกหมายเลขตั๋วที่นี่" style={{ borderRadius: "8px" }} />
@@ -216,7 +253,7 @@ const Verifier: React.FC = () => {
                             </Row>
                         </Form>
                         <Divider />
-                        {/* <QRScanner onScan={handleQRScan} /> */}
+                        <QRScanner onScan={handleQRScan} />
                     </Card>
                 </Col>
 

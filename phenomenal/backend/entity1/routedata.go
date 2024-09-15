@@ -6,8 +6,8 @@ import (
 
 type RouteData struct {
 	gorm.Model
-	Province1 	string
-	Province2 	string
-	Distance  	float32
-	Time		int
+	Province1 string
+	Province2 string
+	Distance  float32
+	Time      int
 }

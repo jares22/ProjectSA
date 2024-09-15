@@ -28,7 +28,7 @@ func DB() *gorm.DB {
 // SetupDatabase automates the migration of database schema.
 func SetupDatabase() {
 	err := db.AutoMigrate(
-		&entity.Employee{},
+		&entity.Employees{},
 		&entity.Vehicles{},
 		&entity.Route{},
 		&entity.RouteData{},
@@ -36,12 +36,11 @@ func SetupDatabase() {
 
 		&entity.Drivers{},
 		&entity.BusTiming{},
-		&entity.Seat{},
+	
 
 		&entity.Passenger{},
 		&entity.Payment{},
 		
-		//&entity.Ticket{},
 		
 		
 		&entity.TicketVerification{},

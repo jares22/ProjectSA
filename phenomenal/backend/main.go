@@ -28,13 +28,11 @@ func main() {
 	router := r.Group("")
 	{
 		router.POST("/verify-ticket", controller.VerifyTicket)
-		//router.GET("/ticket", controller.GetTicket)
 		router.PATCH("/update-seat-status", controller.UpdateSeatStatus)
 		r.GET("/bus-rounds", controller.GetBusRounds)
 		r.GET("/verifiers", controller.GetVerifiers)
-		router.POST("/ticket-verifications", controller.CreateTicketVerification)
-		router.POST("/ticket-verificationss", controller.TicketVerification)
-		
+		router.POST("/ticket-verify", controller.TicketVerification)
+
 	}
 
 	r.GET("/", func(c *gin.Context) {

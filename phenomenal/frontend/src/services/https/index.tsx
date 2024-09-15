@@ -60,7 +60,7 @@ export async function GetVerifiers(bustiming_id?: string): Promise<TicketVerific
     method: "GET",
     headers: { "Content-Type": "application/json" },
   };
-
+console.log("2.1 ได้อะไรมา:", requestOptions);
   // Pass the bustiming_id as a query parameter if provided
   const url = bustiming_id ? `${apiUrl}/verifiers?bustiming_id=${bustiming_id}` : `${apiUrl}/ticket`;
   const res = await fetch(url, requestOptions);
@@ -106,10 +106,10 @@ export async function fetchBusRounds(): Promise<BusRound[]> {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   };
-
+console.log("1.2: สิ่งที่ได้รับมาจากรอบรถ", requestOptions);
   try {
     const response = await fetch(`${apiUrl}/bus-rounds`, requestOptions);
-    console.log("fetchBusRounds->", response);
+    console.log("1.3:สิ่งที่ได้คือ", response.json);
     if (response.ok) {
       const data: BusRound[] = await response.json();
       return data;
@@ -124,7 +124,7 @@ export async function fetchBusRounds(): Promise<BusRound[]> {
 
 
 
-export async function TicketVerifyTion(data: CreateTicketVerification) {
+export async function TicketVerifycation(data: CreateTicketVerification) {
   const requestOptions: RequestInit = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -133,8 +133,9 @@ export async function TicketVerifyTion(data: CreateTicketVerification) {
   console.log("TicketVerifyTion->", requestOptions);
 
   try {
-    const response = await fetch(`${apiUrl}/ticket-verifications`, requestOptions);
-
+    const response = await fetch(`${apiUrl}/ticket-verify`, requestOptions);
+    console.log("TicketVerifyTion->", fetch);
+    console.log("TicketVerifyTion----->", response.json);
     if (!response.ok) {
       // Handle errors if the response is not OK
       const errorText = await response.text();
